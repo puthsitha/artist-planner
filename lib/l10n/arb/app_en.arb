@@ -1,0 +1,63 @@
+{
+  "@@locale": "en",
+  "please_turn_on_permission": "Please turn on {permissionType} permission",
+  "@please_turn_on_permission": {
+    "placeholders": {
+      "permissionType": {
+        "description": "label permission type"
+      }
+    }
+  },
+  "open_setting": "Open Settings",
+  "@open_setting": {
+    "description": "lable open settings"
+  },
+  "photo": "Photo",
+  "@photo": {},
+  "camera": "Camera",
+  "@camera": {},
+  "copyright": "Copyright",
+  "@copyright": {},
+  "version": "Version",
+  "@version": {},
+  "language": "Language",
+  "@language": {},
+  "press_here_change_language": "Press here to change language",
+  "@press_here_change_language": {},
+  "customize_theme_appearance": "Customize theme appearance",
+  "@customize_theme_appearance": {},
+  "theme": "Theme",
+  "@theme": {},
+  "save": "Save",
+  "@save": {},
+  "dark_mode": "Dark Mode",
+  "@dark_mode": {},
+  "light_mode": "Light Mode",
+  "@light_mode": {},
+  "system_default": "System Default",
+  "@system_default": {},
+  "dark_mode_description": "App look darker.",
+  "@dark_mode_description": {},
+  "cancel": "Cancel",
+  "@cancel": {},
+  "setting": "Setting",
+  "@setting": {},
+  "onboarding_title_1": "Make It Happen",
+  "@onboarding_title_1": {},
+  "onboarding_content_1": "Find inspiration and the right tools to turn your artistic dreams into clear goals. Plan your creative journey with confidence, stay motivated every day, and take meaningful steps toward the art you truly want to create.",
+  "@onboarding_content_1": {},
+  "onboarding_title_2": "Vision to Reality",
+  "@onboarding_title_2": {},
+  "onboarding_content_2": "Turn your creative vision into reality with simple, intuitive planning tools. Break big ideas into actionable tasks, organize your workflow, and move forward with clarity and purpose.",
+  "@onboarding_content_2": {},
+  "onboarding_title_3": "Elegant Calendar",
+  "@onboarding_title_3": {},
+  "onboarding_content_3": "Stay organized and in control with a beautifully designed calendar made for artists. Schedule projects, track deadlines, and balance creativity with structure — all in one elegant view.",
+  "@onboarding_content_3": {},
+  "next": "Next",
+  "@next": {},
+  "skip": "Skip",
+  "@skip": {},
+  "get_started": "Get Started",
+  "@get_started": {}
+}

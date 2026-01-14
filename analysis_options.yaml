@@ -1,0 +1,18 @@
+include: package:bloc_lint/recommended.yaml
+
+analyzer:
+  errors:
+    lines_longer_than_80_chars: ignore
+    avoid_print: ignore
+    flutter_style_todos: ignore
+    use_colored_box: ignore
+  exclude:
+    - lib/l10n/gen/*
+linter:
+  rules:
+    public_member_api_docs: false
+
+bloc:
+  rules:
+    - avoid_flutter_imports
+    - avoid_public_bloc_methods

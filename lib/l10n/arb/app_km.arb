@@ -1,0 +1,63 @@
+{
+  "@@locale": "km",
+  "please_turn_on_permission": "សូមបើកការអនុញ្ញាត {permissionType}",
+  "@please_turn_on_permission": {
+    "placeholders": {
+      "permissionType": {
+        "description": "label permission type"
+      }
+    }
+  },
+  "open_setting": "បើកការកំណត់",
+  "@open_setting": {
+    "description": "lable open settings"
+  },
+  "photo": "រូបភាព",
+  "@photo": {},
+  "camera": "កាមេរ៉ា",
+  "@camera": {},
+  "copyright": "រក្សាសិទ្ធិ",
+  "@copyright": {},
+  "version": "កំណែទម្រង់",
+  "@version": {},
+  "language": "ភាសា",
+  "@language": {},
+  "press_here_change_language": "ចុចទីនេះដើម្បីប្តូរភាសា",
+  "@press_here_change_language": {},
+  "customize_theme_appearance": "ប្ដូររូបរាងកម្មវិធីតាមបំណង",
+  "@customize_theme_appearance": {},
+  "theme": "ដូរពណ៍កម្មវិធី",
+  "@theme": {},
+  "save": "រក្សាទុក",
+  "@save": {},
+  "dark_mode": "ផ្ទាំងងងឹត",
+  "@dark_mode": {},
+  "light_mode": "ផ្ទាំងភ្លឺ",
+  "@light_mode": {},
+  "system_default": "ផ្ទាំងដូចទូរស័ព្ទ",
+  "@system_default": {},
+  "dark_mode_description": "កម្មវិធីនេះនឹងប្រើផ្ទាំងងងឹត",
+  "@dark_mode_description": {},
+  "cancel": "បោះបង់",
+  "@cancel": {},
+  "setting": "ការកំណត់",
+  "@setting": {},
+  "onboarding_title_1": "ធ្វើឱ្យវាក្លាយជាការពិត",
+  "@onboarding_title_1": {},
+  "onboarding_content_1": "ស្វែងរកការបំផុសគំនិត និងឧបករណ៍ត្រឹមត្រូវ ដើម្បីបម្លែងក្តីស្រមៃសិល្បៈរបស់អ្នកទៅជាគោលដៅច្បាស់លាស់។ រៀបចំដំណើរសិល្បៈរបស់អ្នកដោយមានទំនុកចិត្ត រក្សាកម្លាំងចិត្តរៀងរាល់ថ្ងៃ និងធ្វើជំហានមានន័យទៅរកស្នាដៃដែលអ្នកចង់បង្កើត។",
+  "@onboarding_content_1": {},
+  "onboarding_title_2": "ពីចក្ខុវិស័យទៅជាការពិត",
+  "@onboarding_title_2": {},
+  "onboarding_content_2": "បម្លែងចក្ខុវិស័យច្នៃប្រឌិតរបស់អ្នកទៅជាការពិត ដោយប្រើឧបករណ៍រៀបចំដែលងាយស្រួល និងឆ្លាតវៃ។ បំបែកគំនិតធំៗទៅជាភារកិច្ចអនុវត្តបាន រៀបចំលំហូរការងាររបស់អ្នក និងឆ្ពោះទៅមុខដោយភាពច្បាស់លាស់ និងគោលបំណង។",
+  "@onboarding_content_2": {},
+  "onboarding_title_3": "ប្រតិទិនដ៏ឆើតឆាយ",
+  "@onboarding_title_3": {},
+  "onboarding_content_3": "រក្សាភាពរៀបរយ និងគ្រប់គ្រងការងាររបស់អ្នកបានល្អ ដោយប្រើប្រតិទិនដែលរចនាឡើងយ៉ាងស្រស់ស្អាត សម្រាប់សិល្បករ។ កំណត់ពេលគម្រោង តាមដានកាលកំណត់ និងសម្របសម្រួលភាពច្នៃប្រឌិតជាមួយរចនាសម្ព័ន្ធ ក្នុងទិដ្ឋភាពឆើតឆាយតែមួយ។",
+  "@onboarding_content_3": {},
+  "next": "បន្ទាប់",
+  "@next": {},
+  "skip": "រំលង",
+  "@skip": {},
+  "get_started": "ចាប់ផ្តើម",
+  "@get_started": {}
+}
