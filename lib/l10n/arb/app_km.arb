@@ -59,5 +59,11 @@
   "skip": "រំលង",
   "@skip": {},
   "get_started": "ចាប់ផ្តើម",
-  "@get_started": {}
+  "@get_started": {},
+  "home": "ទំព័រដើម",
+  "@home": {},
+  "calender": "ប្រតិទិន",
+  "@calender": {},
+  "goal": "គោលដៅ",
+  "@goal": {}
 }

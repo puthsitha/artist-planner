@@ -1,5 +1,6 @@
 import 'package:artistplanner/core/common/common.dart';
 import 'package:artistplanner/core/routes/src/not_found_screen.dart';
+import 'package:artistplanner/core/routes/widget/bottom_bar.dart';
 import 'package:artistplanner/core/themes/themes.dart';
 import 'package:artistplanner/feature/calendar/calendar.dart';
 import 'package:artistplanner/feature/dashboard/dashboard.dart';
@@ -7,11 +8,11 @@ import 'package:artistplanner/feature/goal/goal.dart';
 import 'package:artistplanner/feature/on_boarding/on_boarding.dart';
 import 'package:artistplanner/feature/setting/setting.dart';
 import 'package:artistplanner/feature/splash/splash.dart';
-import 'package:artistplanner/widgets/widgets.dart';
+import 'package:artistplanner/l10n/l10n.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 import 'package:go_router/go_router.dart';
+import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 
 enum Pages {
   /// splash
@@ -174,97 +175,39 @@ class BottomNavigationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
-      bottomNavigationBar: Padding(
-        padding: EdgeInsets.fromLTRB(
-          Spacing.normal,
-          0,
-          Spacing.normal,
-          Spacing.normal + MediaQuery.of(context).padding.bottom,
-        ),
-        child: LiquidGlass.withOwnLayer(
-          shape: const LiquidRoundedRectangle(borderRadius: Raduis.xxl),
-          settings: const LiquidGlassSettings(),
-          child: SizedBox(
-            height: kBottomNavBarHeight,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _NavButton(
-                  icon: Icons.dashboard_rounded,
-                  index: 0,
-                  currentIndex: child.currentIndex,
-                  onTap: (i) => child.goBranch(
-                    i,
-                    initialLocation: i == child.currentIndex,
-                  ),
-                ),
-                _NavButton(
-                  icon: Icons.calendar_month,
-                  index: 1,
-                  currentIndex: child.currentIndex,
-                  onTap: (i) => child.goBranch(
-                    i,
-                    initialLocation: i == child.currentIndex,
-                  ),
-                ),
-                _NavButton(
-                  icon: Icons.bar_chart_rounded,
-                  index: 2,
-                  currentIndex: child.currentIndex,
-                  onTap: (i) => child.goBranch(
-                    i,
-                    initialLocation: i == child.currentIndex,
-                  ),
-                ),
-                _NavButton(
-                  icon: Icons.settings_rounded,
-                  index: 3,
-                  currentIndex: child.currentIndex,
-                  onTap: (i) => child.goBranch(
-                    i,
-                    initialLocation: i == child.currentIndex,
-                  ),
-                ),
-              ],
+      bottomNavigationBar: SafeArea(
+        child: LiquidGlassBottomBar(
+          fake: false,
+          spacing: Spacing.normal,
+          horizontalPadding: Spacing.normal,
+          bottomPadding: 0,
+          barHeight: kBottomNavBarHeight,
+          glassSettings: LiquidGlassSettings(),
+          tabs: [
+            LiquidGlassBottomBarTab(
+              label: context.l10n.home,
+              icon: Icons.dashboard_rounded,
             ),
-          ),
+            LiquidGlassBottomBarTab(
+              label: context.l10n.calender,
+              icon: Icons.calendar_month,
+            ),
+            LiquidGlassBottomBarTab(
+              label: context.l10n.goal,
+              icon: Icons.bar_chart_rounded,
+            ),
+            LiquidGlassBottomBarTab(
+              label: context.l10n.setting,
+              icon: Icons.settings_rounded,
+            ),
+          ],
+          selectedIndex: child.currentIndex,
+          onTabSelected: (index) {
+            child.goBranch(index, initialLocation: index == child.currentIndex);
+          },
         ),
       ),
       body: child,
-    );
-  }
-}
-
-class _NavButton extends StatelessWidget {
-  const _NavButton({
-    required this.icon,
-    required this.index,
-    required this.currentIndex,
-    required this.onTap,
-  });
-
-  final IconData icon;
-  final int index;
-  final int currentIndex;
-  final void Function(int) onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final active = index == currentIndex;
-    return ScaleButton(
-      onTap: () => onTap(index),
-      child: Container(
-        width: 56,
-        height: 56,
-        alignment: Alignment.center,
-        child: Icon(
-          icon,
-          size: 26,
-          color: active
-              ? AppColors.pureWhite
-              : AppColors.pureWhite.withValues(alpha: 0.5),
-        ),
-      ),
     );
   }
 }

@@ -59,5 +59,11 @@
   "skip": "Skip",
   "@skip": {},
   "get_started": "Get Started",
-  "@get_started": {}
+  "@get_started": {},
+  "home": "Home",
+  "@home": {},
+  "calender": "Calender",
+  "@calender": {},
+  "goal": "Goal",
+  "@goal": {}
 }
