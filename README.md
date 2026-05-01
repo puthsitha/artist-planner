@@ -10,7 +10,7 @@ This is the app make by an inspiration from artist planner book
 
 ## Using FVM 🧠
 
-- fvm stable version : 3.38.6
+- fvm stable version : 3.41.9
 
 ---
 
