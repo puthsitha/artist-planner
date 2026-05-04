@@ -1,10 +1,13 @@
+import 'package:artistplanner/core/blocs/theme/theme_bloc.dart';
 import 'package:artistplanner/core/common/common.dart';
+import 'package:artistplanner/core/enums/enums.dart';
 import 'package:artistplanner/core/extensions/extensions.dart';
 import 'package:artistplanner/core/themes/themes.dart';
 import 'package:artistplanner/l10n/l10n.dart';
 import 'package:artistplanner/widgets/widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -30,6 +33,46 @@ class SettingView extends StatelessWidget {
     );
   }
 
+  Future<void> _showThemeDialog(BuildContext context) async {
+    final bloc = context.read<ThemeBloc>();
+    final current = bloc.state.selectTheme;
+    await showDialog<void>(
+      context: context,
+      builder: (dialogCtx) {
+        return AlertDialog(
+          backgroundColor: const Color(0xFF1B1625),
+          title: const Text(
+            'Choose theme',
+            style: TextStyle(color: Colors.white),
+          ),
+          content: RadioGroup<ThemeColor>(
+            groupValue: current,
+            onChanged: (value) {
+              if (value != null) {
+                bloc.add(ThemeAppChange(theme: value));
+              }
+              Navigator.of(dialogCtx).pop();
+            },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                for (final t in ThemeColor.values)
+                  RadioListTile<ThemeColor>(
+                    value: t,
+                    activeColor: const Color(0xFFE7A8FF),
+                    title: Text(
+                      t.label,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   Future<String> getAppVersion() async {
     final info = await PackageInfo.fromPlatform();
     final version = kDebugMode
@@ -50,86 +93,116 @@ class SettingView extends StatelessWidget {
       body: LiquidGlassLayer(
         fake: false,
         settings: LiquidGlassSettings(),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: Spacing.normal),
-              child: Column(
-                spacing: Spacing.normal,
-                children: [
-                  Image.asset(ImagePaths.transparentLogo, width: 200),
-                  LiquidStretch(
-                    child: LiquidGlass.grouped(
-                      shape: LiquidRoundedSuperellipse(borderRadius: 20),
-                      child: GlassGlow(
-                        child: GestureDetector(
-                          behavior: HitTestBehavior.opaque,
-                          child: ListTile(
-                            leading: const Icon(
-                              Icons.language,
-                              size: 40,
-                              color: Colors.tealAccent,
-                            ),
-                            title: Text(
-                              l10n.language,
-                              style: context.textTheme.titleLarge,
-                            ),
-                            subtitle: Text(
-                              l10n.press_here_change_language,
-                              style: context.textTheme.bodyLarge,
-                            ),
-                            trailing: const Icon(Icons.arrow_forward_ios),
-                            onTap: () => _showLanguageDialog(context),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  LiquidStretch(
-                    child: LiquidGlass.grouped(
-                      shape: LiquidRoundedSuperellipse(borderRadius: 20),
-                      child: GlassGlow(
-                        child: GestureDetector(
-                          behavior: HitTestBehavior.opaque,
-                          child: ListTile(
-                            leading: const Icon(
-                              Icons.color_lens_rounded,
-                              size: 40,
-                              color: Colors.indigoAccent,
-                            ),
-                            title: Text(
-                              l10n.theme,
-                              style: context.textTheme.titleLarge,
-                            ),
-                            subtitle: Text(
-                              l10n.customize_theme_appearance,
-                              style: context.textTheme.bodyLarge,
-                            ),
-                            trailing: const Icon(Icons.arrow_forward_ios),
-                            // onTap: () => _showLanguageDialog(context),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(
+                0,
+                0,
+                0,
+                kBottomNavBarHeight + Spacing.l,
               ),
-            ),
-            Expanded(
-              child: Center(
-                child: FutureBuilder<String>(
-                  future: getAppVersion(),
-                  builder: (context, snapshot) {
-                    final version = snapshot.data ?? '';
-                    return Text(
-                      '${l10n.copyright} © ${l10n.version} $version',
-                      style: context.textTheme.titleMedium,
-                    );
-                  },
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight:
+                      constraints.maxHeight - (kBottomNavBarHeight + Spacing.l),
+                ),
+                child: IntrinsicHeight(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: Spacing.normal,
+                        ),
+                        child: Column(
+                          spacing: Spacing.normal,
+                          children: [
+                            Image.asset(ImagePaths.transparentLogo, width: 200),
+                            LiquidStretch(
+                              child: LiquidGlass.grouped(
+                                shape: LiquidRoundedSuperellipse(
+                                  borderRadius: 20,
+                                ),
+                                child: GlassGlow(
+                                  child: GestureDetector(
+                                    behavior: HitTestBehavior.opaque,
+                                    child: ListTile(
+                                      leading: const Icon(
+                                        Icons.language,
+                                        size: 40,
+                                        color: Colors.tealAccent,
+                                      ),
+                                      title: Text(
+                                        l10n.language,
+                                        style: context.textTheme.titleLarge,
+                                      ),
+                                      subtitle: Text(
+                                        l10n.press_here_change_language,
+                                        style: context.textTheme.bodyLarge,
+                                      ),
+                                      trailing: const Icon(
+                                        Icons.arrow_forward_ios,
+                                      ),
+                                      onTap: () => _showLanguageDialog(context),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            LiquidStretch(
+                              child: LiquidGlass.grouped(
+                                shape: LiquidRoundedSuperellipse(
+                                  borderRadius: 20,
+                                ),
+                                child: GlassGlow(
+                                  child: GestureDetector(
+                                    behavior: HitTestBehavior.opaque,
+                                    child: ListTile(
+                                      leading: const Icon(
+                                        Icons.color_lens_rounded,
+                                        size: 40,
+                                        color: Colors.indigoAccent,
+                                      ),
+                                      title: Text(
+                                        l10n.theme,
+                                        style: context.textTheme.titleLarge,
+                                      ),
+                                      subtitle: Text(
+                                        l10n.customize_theme_appearance,
+                                        style: context.textTheme.bodyLarge,
+                                      ),
+                                      trailing: const Icon(
+                                        Icons.arrow_forward_ios,
+                                      ),
+                                      onTap: () => _showThemeDialog(context),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Center(
+                          child: FutureBuilder<String>(
+                            future: getAppVersion(),
+                            builder: (context, snapshot) {
+                              final version = snapshot.data ?? '';
+                              return Text(
+                                '${l10n.copyright} © ${l10n.version} $version',
+                                style: context.textTheme.titleMedium,
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            );
+          },
         ),
       ),
     );

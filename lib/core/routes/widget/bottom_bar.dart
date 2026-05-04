@@ -243,7 +243,7 @@ class _BottomBarTab extends StatelessWidget {
                                 shape: BoxShape.circle,
                                 boxShadow: [
                                   BoxShadow(
-                                    color: tab.glowColor!.withOpacity(
+                                    color: tab.glowColor!.withValues(alpha:
                                       selected ? 0.6 : 0,
                                     ),
                                     blurRadius: 32,
