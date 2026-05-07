@@ -1,3 +1,4 @@
+import 'package:artistplanner/core/blocs/theme/theme_bloc.dart';
 import 'package:artistplanner/core/common/common.dart';
 import 'package:artistplanner/core/routes/src/not_found_screen.dart';
 import 'package:artistplanner/core/routes/widget/bottom_bar.dart';
@@ -11,6 +12,7 @@ import 'package:artistplanner/feature/splash/splash.dart';
 import 'package:artistplanner/l10n/l10n.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 
@@ -28,6 +30,9 @@ enum Pages {
 
   /// goal
   goal,
+
+  /// goal form (create / update)
+  goalForm,
 
   /// setting
   setting,
@@ -142,6 +147,23 @@ class AppRouter {
                           return GoalPage.page(key: state.pageKey);
                         },
                       ),
+                      GoRoute(
+                        name: Pages.goalForm.name,
+                        parentNavigatorKey: goalShellNavigatorKey,
+                        path: 'goal-form',
+                        pageBuilder: (context, state) {
+                          final args = state.extra as GoalFormArgs?;
+                          if (args == null) {
+                            return NotFoundScreen.page(key: state.pageKey);
+                          }
+                          return GoalFormPage.page(
+                            key: state.pageKey,
+                            year: args.year,
+                            month: args.month,
+                            editing: args.editing,
+                          );
+                        },
+                      ),
                     ],
                   ),
                 ],
@@ -173,11 +195,12 @@ class BottomNavigationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final fakeGlass = !context.watch<ThemeBloc>().state.isGlassUI;
     return Scaffold(
       extendBody: true,
       bottomNavigationBar: SafeArea(
         child: LiquidGlassBottomBar(
-          fake: false,
+          fake: fakeGlass,
           spacing: Spacing.normal,
           horizontalPadding: Spacing.normal,
           bottomPadding: 0,

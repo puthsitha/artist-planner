@@ -12,6 +12,9 @@ class ThemeBloc extends HydratedBloc<ThemeEvent, ThemeState> {
     on<ThemeAppChange>(
       (event, emit) => _changeTheme(event, emit, theme: event.theme),
     );
+    on<ThemeGlassToggled>(
+      (event, emit) => emit(state.copyWith(isGlassUI: event.enabled)),
+    );
   }
 
   Future<void> _changeTheme(
@@ -26,7 +29,9 @@ class ThemeBloc extends HydratedBloc<ThemeEvent, ThemeState> {
   ThemeState? fromJson(Map<String, dynamic> json) {
     try {
       final theme = ThemeColor.values.byName(json['themeColor'] as String);
-      return ThemeState(selectTheme: theme);
+      // Older persisted payloads may not have `isGlassUI` — default to true.
+      final isGlassUI = json['isGlassUI'] as bool? ?? true;
+      return ThemeState(selectTheme: theme, isGlassUI: isGlassUI);
     } on Exception catch (e) {
       log('Error deserializing state: $e');
       return null;
@@ -35,6 +40,9 @@ class ThemeBloc extends HydratedBloc<ThemeEvent, ThemeState> {
 
   @override
   Map<String, dynamic>? toJson(ThemeState state) {
-    return {'themeColor': state.selectTheme.name};
+    return {
+      'themeColor': state.selectTheme.name,
+      'isGlassUI': state.isGlassUI,
+    };
   }
 }

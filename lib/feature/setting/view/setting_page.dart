@@ -85,13 +85,14 @@ class SettingView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final isGlassUI = context.watch<ThemeBloc>().state.isGlassUI;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: context.colors.transparent,
         title: Text(l10n.setting),
       ),
       body: LiquidGlassLayer(
-        fake: false,
+        fake: !isGlassUI,
         settings: LiquidGlassSettings(),
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -176,6 +177,38 @@ class SettingView extends StatelessWidget {
                                       ),
                                       onTap: () => _showThemeDialog(context),
                                     ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            LiquidStretch(
+                              child: LiquidGlass.grouped(
+                                shape: LiquidRoundedSuperellipse(
+                                  borderRadius: 20,
+                                ),
+                                child: GlassGlow(
+                                  child: SwitchListTile.adaptive(
+                                    secondary: const Icon(
+                                      Icons.auto_awesome,
+                                      size: 40,
+                                      color: Color(0xFFE7A8FF),
+                                    ),
+                                    title: Text(
+                                      'Glass UI',
+                                      style: context.textTheme.titleLarge,
+                                    ),
+                                    subtitle: Text(
+                                      isGlassUI
+                                          ? 'Liquid glass effects are on'
+                                          : 'Switched to a flat, lighter UI',
+                                      style: context.textTheme.bodyLarge,
+                                    ),
+                                    value: isGlassUI,
+                                    activeColor: const Color(0xFFE7A8FF),
+                                    onChanged: (value) =>
+                                        context.read<ThemeBloc>().add(
+                                          ThemeGlassToggled(enabled: value),
+                                        ),
                                   ),
                                 ),
                               ),

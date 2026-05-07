@@ -1,4 +1,5 @@
 import 'package:artistplanner/core/blocs/lang/language_bloc.dart';
+import 'package:artistplanner/core/blocs/theme/theme_bloc.dart';
 import 'package:artistplanner/core/common/common.dart';
 import 'package:artistplanner/l10n/l10n.dart';
 import 'package:flutter/material.dart';
@@ -32,11 +33,12 @@ class _ChangeLanguageState extends State<ChangeLanguage> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final fakeGlass = !context.watch<ThemeBloc>().state.isGlassUI;
 
     return Dialog(
       backgroundColor: Colors.transparent,
       child: LiquidGlassLayer(
-        fake: false,
+        fake: fakeGlass,
         settings: LiquidGlassSettings(
           // glassColor: Color.from(alpha: .1, red: 1, green: 1, blue: 1),
           saturation: 2,

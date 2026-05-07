@@ -1,3 +1,4 @@
+import 'package:artistplanner/core/blocs/theme/theme_bloc.dart';
 import 'package:artistplanner/core/common/common.dart';
 import 'package:artistplanner/core/enums/enums.dart';
 import 'package:artistplanner/core/models/models.dart';
@@ -36,44 +37,57 @@ class DashboardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final today = DateTime.now();
+    final fakeGlass = !context.watch<ThemeBloc>().state.isGlassUI;
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: SafeArea(
         bottom: false,
-        child: LiquidGlassLayer(
-          fake: false,
-          settings: LiquidGlassSettings(),
-          child: ListView(
-            padding: const EdgeInsets.fromLTRB(
-              Spacing.normal,
-              Spacing.normal,
-              Spacing.normal,
-              kBottomNavBarHeight + Spacing.l,
-            ),
-            children: [
-              Text(
-                _greeting(),
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: Spacing.xs),
-              Text(
-                'Plant a small kindness in your day, artist.',
-                style: TextStyle(color: Colors.white.withValues(alpha: 0.75)),
-              ),
-              const SizedBox(height: Spacing.normal),
-              const QuoteBanner(),
-              const SizedBox(height: Spacing.l),
-              _DailyCheckInRow(today: today),
-              const SizedBox(height: Spacing.l),
-              const MoodOverview(),
-              const SizedBox(height: Spacing.l),
-              _MonthlyProgressCard(year: today.year, month: today.month),
-            ],
+        child: ListView(
+          padding: const EdgeInsets.only(
+            top: Spacing.normal,
+            left: Spacing.normal,
+            right: Spacing.normal,
           ),
+          children: [
+            Text(
+              _greeting(),
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w700,
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(height: Spacing.xs),
+            Text(
+              'Plant a small kindness in your day, artist.',
+              style: TextStyle(color: Colors.white.withValues(alpha: 0.75)),
+            ),
+            const SizedBox(height: Spacing.normal),
+            LiquidGlassLayer(
+              fake: fakeGlass,
+              settings: LiquidGlassSettings(),
+              child: const QuoteBanner(),
+            ),
+            const SizedBox(height: Spacing.l),
+            LiquidGlassLayer(
+              fake: fakeGlass,
+              settings: LiquidGlassSettings(),
+              child: _DailyCheckInRow(today: today),
+            ),
+            const SizedBox(height: Spacing.l),
+            LiquidGlassLayer(
+              fake: fakeGlass,
+              settings: LiquidGlassSettings(),
+              child: const MoodOverview(),
+            ),
+            const SizedBox(height: Spacing.l),
+            LiquidGlassLayer(
+              fake: fakeGlass,
+              settings: LiquidGlassSettings(),
+              child: _MonthlyProgressCard(year: today.year, month: today.month),
+            ),
+            SizedBox(height: kBottomNavBarHeight + Spacing.l7),
+          ],
         ),
       ),
     );

@@ -6,3 +6,8 @@ class ThemeAppChange extends ThemeEvent {
   ThemeAppChange({required this.theme});
   final ThemeColor theme;
 }
+
+class ThemeGlassToggled extends ThemeEvent {
+  ThemeGlassToggled({required this.enabled});
+  final bool enabled;
+}

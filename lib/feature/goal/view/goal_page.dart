@@ -1,12 +1,15 @@
+import 'package:artistplanner/core/blocs/theme/theme_bloc.dart';
 import 'package:artistplanner/core/common/common.dart';
 import 'package:artistplanner/core/enums/enums.dart';
 import 'package:artistplanner/core/models/models.dart';
+import 'package:artistplanner/core/routes/routes.dart';
 import 'package:artistplanner/core/themes/themes.dart';
 import 'package:artistplanner/feature/goal/bloc/goal_bloc.dart';
-import 'package:artistplanner/feature/goal/widgets/goal_form_sheet.dart';
+import 'package:artistplanner/feature/goal/view/goal_form_page.dart';
 import 'package:artistplanner/feature/goal/widgets/reflection_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 
 class GoalPage extends StatelessWidget {
@@ -78,6 +81,7 @@ class _GoalViewState extends State<GoalView> {
 
   @override
   Widget build(BuildContext context) {
+    final fakeGlass = !context.watch<ThemeBloc>().state.isGlassUI;
     return BlocBuilder<GoalBloc, GoalState>(
       builder: (context, state) {
         final goalsByCategory = state.goalsByCategory(
@@ -103,14 +107,16 @@ class _GoalViewState extends State<GoalView> {
           floatingActionButton: SafeArea(
             child: Padding(
               padding: const EdgeInsets.only(
-                bottom: kBottomNavBarHeight + Spacing.l,
+                bottom: kBottomNavBarHeight + Spacing.l7,
               ),
               child: FloatingActionButton.extended(
                 foregroundColor: Colors.white,
-                onPressed: () => GoalFormSheet.show(
-                  context,
-                  year: _viewMonth.year,
-                  month: _viewMonth.month,
+                onPressed: () => context.pushNamed(
+                  Pages.goalForm.name,
+                  extra: GoalFormArgs(
+                    year: _viewMonth.year,
+                    month: _viewMonth.month,
+                  ),
                 ),
                 icon: const Icon(Icons.add),
                 label: const Text('New goal'),
@@ -120,15 +126,14 @@ class _GoalViewState extends State<GoalView> {
           body: SafeArea(
             bottom: false,
             child: ListView(
-              padding: const EdgeInsets.fromLTRB(
-                Spacing.normal,
-                Spacing.s,
-                Spacing.normal,
-                kBottomNavBarHeight + Spacing.l,
+              padding: const EdgeInsets.only(
+                top: Spacing.normal,
+                left: Spacing.normal,
+                right: Spacing.normal,
               ),
               children: [
                 LiquidGlassLayer(
-                  fake: false,
+                  fake: fakeGlass,
                   settings: LiquidGlassSettings(),
                   child: _MonthSwitcher(
                     label:
@@ -139,7 +144,7 @@ class _GoalViewState extends State<GoalView> {
                 ),
                 const SizedBox(height: Spacing.normal),
                 LiquidGlassLayer(
-                  fake: false,
+                  fake: fakeGlass,
                   settings: LiquidGlassSettings(),
                   child: _ProgressCard(
                     progress: progress,
@@ -150,7 +155,7 @@ class _GoalViewState extends State<GoalView> {
                 if (_monthIsEnding) ...[
                   const SizedBox(height: Spacing.normal),
                   LiquidGlassLayer(
-                    fake: false,
+                    fake: fakeGlass,
                     settings: LiquidGlassSettings(),
                     child: _ReflectionCard(
                       year: _viewMonth.year,
@@ -162,18 +167,21 @@ class _GoalViewState extends State<GoalView> {
                 const SizedBox(height: Spacing.l),
                 for (final cat in GoalCategory.values)
                   LiquidGlassLayer(
-                    fake: false,
+                    fake: fakeGlass,
                     settings: LiquidGlassSettings(),
                     child: _CategorySection(
                       category: cat,
                       goals: goalsByCategory[cat] ?? const [],
-                      onAdd: () => GoalFormSheet.show(
-                        context,
-                        year: _viewMonth.year,
-                        month: _viewMonth.month,
+                      onAdd: () => context.pushNamed(
+                        Pages.goalForm.name,
+                        extra: GoalFormArgs(
+                          year: _viewMonth.year,
+                          month: _viewMonth.month,
+                        ),
                       ),
                     ),
                   ),
+                SizedBox(height: kBottomNavBarHeight + Spacing.l10),
               ],
             ),
           ),
@@ -500,11 +508,13 @@ class _GoalTile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: InkWell(
-        onTap: () => GoalFormSheet.show(
-          context,
-          year: goal.year,
-          month: goal.month,
-          editing: goal,
+        onTap: () => context.pushNamed(
+          Pages.goalForm.name,
+          extra: GoalFormArgs(
+            year: goal.year,
+            month: goal.month,
+            editing: goal,
+          ),
         ),
         borderRadius: BorderRadius.circular(16),
         child: Container(

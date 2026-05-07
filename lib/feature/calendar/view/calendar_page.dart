@@ -1,3 +1,4 @@
+import 'package:artistplanner/core/blocs/theme/theme_bloc.dart';
 import 'package:artistplanner/core/common/common.dart';
 import 'package:artistplanner/core/enums/enums.dart';
 import 'package:artistplanner/core/models/models.dart';
@@ -52,6 +53,7 @@ class _CalendarViewState extends State<CalendarView> {
     final goalState = context.watch<GoalBloc>().state;
     final byDay = emotionState.latestByDay();
     final goals = goalState.goalsForMonth(_viewMonth.year, _viewMonth.month);
+    final fakeGlass = !context.watch<ThemeBloc>().state.isGlassUI;
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -62,9 +64,14 @@ class _CalendarViewState extends State<CalendarView> {
       body: SafeArea(
         bottom: false,
         child: ListView(
+          padding: const EdgeInsets.only(
+            top: Spacing.normal,
+            left: Spacing.normal,
+            right: Spacing.normal,
+          ),
           children: [
             LiquidGlassLayer(
-              fake: false,
+              fake: fakeGlass,
               settings: LiquidGlassSettings(),
               child: _MonthHeader(
                 month: _viewMonth,
@@ -74,7 +81,7 @@ class _CalendarViewState extends State<CalendarView> {
             ),
             const SizedBox(height: Spacing.normal),
             LiquidGlassLayer(
-              fake: false,
+              fake: fakeGlass,
               settings: LiquidGlassSettings(),
               child: _CalendarGrid(
                 month: _viewMonth,
@@ -86,7 +93,7 @@ class _CalendarViewState extends State<CalendarView> {
             ),
             const SizedBox(height: Spacing.l),
             LiquidGlassLayer(
-              fake: false,
+              fake: fakeGlass,
               settings: LiquidGlassSettings(),
               child: _DaySummary(
                 day: _selected,
@@ -100,10 +107,7 @@ class _CalendarViewState extends State<CalendarView> {
                     .toList(),
               ),
             ),
-            Container(
-              color: Colors.red,
-              height: kBottomNavBarHeight + Spacing.l,
-            ),
+            SizedBox(height: kBottomNavBarHeight + Spacing.l7),
           ],
         ),
       ),
@@ -343,6 +347,15 @@ class _DaySummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Latest entry per slot for this day — used to render check vs +
+    final latestPerSlot = <EmotionSlot, EmotionEntry>{};
+    for (final e in entries) {
+      final existing = latestPerSlot[e.slot];
+      if (existing == null || e.date.isAfter(existing.date)) {
+        latestPerSlot[e.slot] = e;
+      }
+    }
+
     return LiquidGlass.grouped(
       shape: const LiquidRoundedSuperellipse(borderRadius: 28),
       child: Padding(
@@ -467,16 +480,11 @@ class _DaySummary extends StatelessWidget {
               children: [
                 for (final s in EmotionSlot.values) ...[
                   Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () =>
+                    child: _SlotCheckInButton(
+                      slot: s,
+                      entry: latestPerSlot[s],
+                      onTap: () =>
                           EmotionPickerSheet.show(context, date: day, slot: s),
-                      icon: const Icon(Icons.add, size: 16),
-                      label: Text(s.label),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        side: const BorderSide(color: Colors.white30),
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                      ),
                     ),
                   ),
                   if (s != EmotionSlot.values.last) const SizedBox(width: 6),
@@ -506,5 +514,73 @@ class _DaySummary extends StatelessWidget {
     ];
     const wd = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     return '${wd[d.weekday - 1]}, ${months[d.month - 1]} ${d.day}, ${d.year}';
+  }
+}
+
+/// Per-slot check-in button used inside [_DaySummary].
+///
+/// When [entry] is null the button shows a `+` icon prompting the user to log
+/// an emotion for that slot. When an entry exists it switches to a soft-pink
+/// "checked" treatment: a check icon + the recorded emoji + a tinted fill,
+/// while still being tappable to update the entry.
+class _SlotCheckInButton extends StatelessWidget {
+  const _SlotCheckInButton({
+    required this.slot,
+    required this.entry,
+    required this.onTap,
+  });
+
+  final EmotionSlot slot;
+  final EmotionEntry? entry;
+  final VoidCallback onTap;
+
+  static const _accent = Color(0xFFFFB7C5); // soft pink to match theme
+
+  @override
+  Widget build(BuildContext context) {
+    final logged = entry != null;
+
+    if (!logged) {
+      return OutlinedButton.icon(
+        onPressed: onTap,
+        icon: const Icon(Icons.add, size: 16),
+        label: Text(slot.label, style: const TextStyle(fontSize: 12)),
+        style: OutlinedButton.styleFrom(
+          foregroundColor: Colors.white,
+          side: const BorderSide(color: Colors.white30),
+          padding: const EdgeInsets.symmetric(vertical: 10),
+        ),
+      );
+    }
+
+    return OutlinedButton(
+      onPressed: onTap,
+      style: OutlinedButton.styleFrom(
+        foregroundColor: Colors.white,
+        backgroundColor: _accent.withValues(alpha: 0.18),
+        side: BorderSide(color: _accent.withValues(alpha: 0.7)),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.check_circle_rounded, size: 16, color: _accent),
+          const SizedBox(width: 4),
+          Text(entry!.emotion.emoji, style: const TextStyle(fontSize: 14)),
+          const SizedBox(width: 4),
+          Flexible(
+            child: Text(
+              slot.label,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
