@@ -204,11 +204,10 @@ class SettingView extends StatelessWidget {
                                       style: context.textTheme.bodyLarge,
                                     ),
                                     value: isGlassUI,
-                                    activeColor: const Color(0xFFE7A8FF),
-                                    onChanged: (value) =>
-                                        context.read<ThemeBloc>().add(
-                                          ThemeGlassToggled(enabled: value),
-                                        ),
+                                    activeTrackColor: const Color(0xFFE7A8FF),
+                                    onChanged: (value) => context
+                                        .read<ThemeBloc>()
+                                        .add(ThemeGlassToggled(enabled: value)),
                                   ),
                                 ),
                               ),
