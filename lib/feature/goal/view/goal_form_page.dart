@@ -397,26 +397,7 @@ class _GoalFormPageState extends State<GoalFormPage> {
                         style: context.textTheme.bodyMedium?.copyWith(
                           color: Colors.white,
                         ),
-                        decoration: _decoration(l10n.title_hint).copyWith(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(Raduis.xl),
-                            borderSide: BorderSide(
-                              color: !_isTitleValid
-                                  ? AppColors.redPrimary.withValues(alpha: 0.5)
-                                  : Colors.transparent,
-                              width: !_isTitleValid ? 1.5 : 0,
-                            ),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(Raduis.xl),
-                            borderSide: BorderSide(
-                              color: !_isTitleValid
-                                  ? AppColors.redPrimary.withValues(alpha: 0.5)
-                                  : Colors.transparent,
-                              width: !_isTitleValid ? 1.5 : 0,
-                            ),
-                          ),
-                        ),
+                        decoration: _decoration(l10n.title_hint),
                       ),
                       const SizedBox(height: Spacing.sm),
                       _FieldLabel(l10n.description_optional),
