@@ -66,14 +66,13 @@
   "@calender": {},
   "goal": "គោលដៅ",
   "@goal": {},
-
   "good_morning": "អរុណសួស្តី ✨",
   "@good_morning": {},
   "good_afternoon": "ទិវាសួស្តី 🌿",
   "@good_afternoon": {},
   "good_evening": "សាយណ្ហសួស្តី 🌙",
   "@good_evening": {},
-  "dashboard_kindness_subtitle": "ដាំអំពើល្អតូចមួយក្នុងថ្ងៃរបស់អ្នក សិល្បករ។",
+  "dashboard_kindness_subtitle": "ដាំអំពើល្អតូចមួយក្នុងថ្ងៃរបស់អ្នក",
   "@dashboard_kindness_subtitle": {},
   "todays_emotion_check_ins": "ការកត់ត្រាអារម្មណ៍ថ្ងៃនេះ",
   "@todays_emotion_check_ins": {},
@@ -92,7 +91,6 @@
       }
     }
   },
-
   "mood_this_week": "អារម្មណ៍សប្តាហ៍នេះ",
   "@mood_this_week": {},
   "avg_score": "ពិន្ទុមធ្យម៖ {score} / 5",
@@ -104,7 +102,6 @@
       }
     }
   },
-
   "calendar_title": "ប្រតិទិន",
   "@calendar_title": {},
   "emotions_logged": "អារម្មណ៍ដែលបានកត់ត្រា",
@@ -115,7 +112,6 @@
   "@no_check_ins_for_day": {},
   "no_goals_due_for_day": "មិនមានគោលដៅផុតកំណត់នៅថ្ងៃនេះទេ។",
   "@no_goals_due_for_day": {},
-
   "goals_title": "គោលដៅទាំងអស់",
   "@goals_title": {},
   "new_goal": "គោលដៅថ្មី",
@@ -192,7 +188,6 @@
   "@add_goal": {},
   "save_changes": "រក្សាទុកការផ្លាស់ប្តូរ",
   "@save_changes": {},
-
   "reflect_on_month": "ឆ្លុះបញ្ចាំងលើខែ {month} ឆ្នាំ {year}",
   "@reflect_on_month": {
     "placeholders": {
@@ -218,7 +213,6 @@
   "@reward_hint": {},
   "save_reflection": "រក្សាទុកការឆ្លុះបញ្ចាំង",
   "@save_reflection": {},
-
   "slot_check_in_title": "ការកត់ត្រាពេល{slot}",
   "@slot_check_in_title": {
     "placeholders": {
@@ -231,7 +225,6 @@
   "@optional_emotion_note_hint": {},
   "save_check_in": "រក្សាទុកការកត់ត្រា",
   "@save_check_in": {},
-
   "glass_ui": "ចំណុចប្រទាក់កញ្ចក់",
   "@glass_ui": {},
   "glass_ui_on": "បែបផែនកញ្ចក់រាវកំពុងបើក",
@@ -240,12 +233,10 @@
   "@glass_ui_off": {},
   "choose_theme": "ជ្រើសរើសផ្ទាំង",
   "@choose_theme": {},
-
   "not_found_title": "រកមិនឃើញ",
   "@not_found_title": {},
   "not_found_message": "អូ… 404 - រកមិនឃើញទំព័រ",
   "@not_found_message": {},
-
   "emotion_joyful": "សប្បាយចិត្ត",
   "@emotion_joyful": {},
   "emotion_grateful": "ដឹងគុណ",
@@ -262,7 +253,6 @@
   "@emotion_sad": {},
   "emotion_angry": "ខឹង",
   "@emotion_angry": {},
-
   "slot_morning": "ព្រឹក",
   "@slot_morning": {},
   "slot_afternoon": "រសៀល",
@@ -275,7 +265,6 @@
   "@slot_afternoon_hint": {},
   "slot_evening_hint": "តើអ្នកកំពុងបិទបញ្ចប់ថ្ងៃរបស់អ្នកយ៉ាងណា?",
   "@slot_evening_hint": {},
-
   "category_career_education": "អាជីព / ការសិក្សា",
   "@category_career_education": {},
   "category_personal_growth": "ការអភិវឌ្ឍខ្លួន",
@@ -288,21 +277,18 @@
   "@category_self_love": {},
   "category_relationship": "ទំនាក់ទំនង",
   "@category_relationship": {},
-
   "priority_high": "ខ្ពស់",
   "@priority_high": {},
   "priority_medium": "មធ្យម",
   "@priority_medium": {},
   "priority_low": "ទាប",
   "@priority_low": {},
-
   "theme_midnight_black": "ខ្មៅអាធ្រាត្រ",
   "@theme_midnight_black": {},
   "theme_warm_brown": "ត្នោតក្តៅ",
   "@theme_warm_brown": {},
   "theme_soft_pink": "ផ្កាឈូកស្រាល",
   "@theme_soft_pink": {},
-
   "month_january": "មករា",
   "@month_january": {},
   "month_february": "កុម្ភៈ",
@@ -327,7 +313,6 @@
   "@month_november": {},
   "month_december": "ធ្នូ",
   "@month_december": {},
-
   "month_short_jan": "មករា",
   "@month_short_jan": {},
   "month_short_feb": "កុម្ភៈ",
@@ -352,7 +337,6 @@
   "@month_short_nov": {},
   "month_short_dec": "ធ្នូ",
   "@month_short_dec": {},
-
   "weekday_short_mon": "ច័ន្ទ",
   "@weekday_short_mon": {},
   "weekday_short_tue": "អង្គារ",
@@ -367,7 +351,6 @@
   "@weekday_short_sat": {},
   "weekday_short_sun": "អាទិត្យ",
   "@weekday_short_sun": {},
-
   "select_month_year": "ជ្រើសរើសខែ និងឆ្នាំ",
   "@select_month_year": {},
   "select_year": "ជ្រើសរើសឆ្នាំ",
@@ -378,7 +361,6 @@
   "@confirm": {},
   "tap_to_select": "ចុចដើម្បីជ្រើសរើសខែ និងឆ្នាំ",
   "@tap_to_select": {},
-
   "required": "ត្រូវបាន",
   "@required": {}
 }

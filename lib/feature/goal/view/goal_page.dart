@@ -581,35 +581,65 @@ class _GoalTile extends StatelessWidget {
   ) {
     showDialog<void>(
       context: context,
-      builder: (BuildContext dialogContext) => AlertDialog(
-        backgroundColor: const Color(0xFF2A2A3E),
-        title: Text(
-          l10n.delete_goal_question,
-          style: const TextStyle(color: Colors.white),
-        ),
-        content: Text(
-          l10n.delete_goal_confirmation(goal.title),
-          style: const TextStyle(color: Colors.white70),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(),
-            child: Text(
-              l10n.cancel,
-              style: const TextStyle(color: Colors.white70),
+      builder: (BuildContext dialogContext) => Dialog(
+        backgroundColor: Colors.transparent,
+        child: LiquidGlassLayer(
+          fake: false,
+          settings: LiquidGlassSettings(lightIntensity: 0),
+          child: LiquidGlass.grouped(
+            shape: const LiquidRoundedSuperellipse(borderRadius: 16),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    l10n.delete_goal_question,
+                    style: context.textTheme.titleLarge?.copyWith(
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    l10n.delete_goal_confirmation(goal.title),
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      color: Colors.white70,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () => Navigator.of(dialogContext).pop(),
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white70,
+                          backgroundColor: Colors.transparent,
+                        ),
+                        child: Text(l10n.cancel),
+                      ),
+                      const SizedBox(width: 8),
+                      ElevatedButton(
+                        onPressed: () {
+                          context.read<GoalBloc>().add(GoalDeleted(goal.id));
+                          Navigator.of(dialogContext).pop();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: AppColors.redPrimary,
+                          backgroundColor: AppColors.redPrimary.withValues(
+                            alpha: 0.2,
+                          ),
+                        ),
+                        child: Text(l10n.delete_action),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
-          TextButton(
-            onPressed: () {
-              context.read<GoalBloc>().add(GoalDeleted(goal.id));
-              Navigator.of(dialogContext).pop();
-            },
-            child: Text(
-              l10n.delete_action,
-              style: const TextStyle(color: Colors.red),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

@@ -150,31 +150,7 @@ class _ReflectionSheetState extends State<ReflectionSheet> {
                       style: context.textTheme.bodyMedium?.copyWith(
                         color: Colors.white,
                       ),
-                      decoration: _decoration(l10n.reflection_phrase_hint)
-                          .copyWith(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(Raduis.xl),
-                              borderSide: BorderSide(
-                                color: !_isPhraseValid
-                                    ? AppColors.redPrimary.withValues(
-                                        alpha: 0.5,
-                                      )
-                                    : Colors.transparent,
-                                width: !_isPhraseValid ? 1.5 : 0,
-                              ),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(Raduis.xl),
-                              borderSide: BorderSide(
-                                color: !_isPhraseValid
-                                    ? AppColors.redPrimary.withValues(
-                                        alpha: 0.5,
-                                      )
-                                    : Colors.transparent,
-                                width: !_isPhraseValid ? 1.5 : 0,
-                              ),
-                            ),
-                          ),
+                      decoration: _decoration(l10n.reflection_phrase_hint),
                     ),
                     const SizedBox(height: Spacing.sm),
                     Text(

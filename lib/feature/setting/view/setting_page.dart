@@ -1,6 +1,5 @@
 import 'package:artistplanner/core/blocs/theme/theme_bloc.dart';
 import 'package:artistplanner/core/common/common.dart';
-import 'package:artistplanner/core/enums/enums.dart';
 import 'package:artistplanner/core/extensions/extensions.dart';
 import 'package:artistplanner/core/themes/themes.dart';
 import 'package:artistplanner/l10n/l10n.dart';
@@ -34,47 +33,9 @@ class SettingView extends StatelessWidget {
   }
 
   Future<void> _showThemeDialog(BuildContext context) async {
-    final bloc = context.read<ThemeBloc>();
-    final current = bloc.state.selectTheme;
-    final l10n = context.l10n;
     await showDialog<void>(
       context: context,
-      builder: (dialogCtx) {
-        return AlertDialog(
-          backgroundColor: const Color(0xFF1B1625),
-          title: Text(
-            l10n.choose_theme,
-            style: context.textTheme.headlineSmall?.copyWith(
-              color: Colors.white,
-            ),
-          ),
-          content: RadioGroup<ThemeColor>(
-            groupValue: current,
-            onChanged: (value) {
-              if (value != null) {
-                bloc.add(ThemeAppChange(theme: value));
-              }
-              Navigator.of(dialogCtx).pop();
-            },
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                for (final t in ThemeColor.values)
-                  RadioListTile<ThemeColor>(
-                    value: t,
-                    activeColor: const Color(0xFFE7A8FF),
-                    title: Text(
-                      t.labelOf(l10n),
-                      style: context.textTheme.bodyLarge?.copyWith(
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-          ),
-        );
-      },
+      builder: (_) => const ChangeTheme(),
     );
   }
 
@@ -102,11 +63,8 @@ class SettingView extends StatelessWidget {
         child: LayoutBuilder(
           builder: (context, constraints) {
             return SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(
-                0,
-                0,
-                0,
-                kBottomNavBarHeight + Spacing.l,
+              padding: const EdgeInsets.only(
+                bottom: kBottomNavBarHeight + Spacing.l,
               ),
               child: ConstrainedBox(
                 constraints: BoxConstraints(

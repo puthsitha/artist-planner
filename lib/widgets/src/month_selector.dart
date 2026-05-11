@@ -73,178 +73,196 @@ class MonthSelector extends StatelessWidget {
           initialItem: monthIndex.clamp(0, 11),
         );
 
-        return AlertDialog(
-          title: Text(context.l10n.select_month_year),
-          backgroundColor: const Color(0xFF2A2A3E),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Year Selector
-                Text(
-                  context.l10n.select_year,
-                  style: context.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: Spacing.s),
-                SizedBox(
-                  height: 150,
-                  child: Stack(
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: const EdgeInsets.symmetric(horizontal: 24),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxHeight: 470),
+            child: LiquidGlassLayer(
+              fake: false,
+              settings: LiquidGlassSettings(lightIntensity: 0),
+              child: LiquidGlass.grouped(
+                shape: const LiquidRoundedSuperellipse(borderRadius: 16),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      // Background highlight for selected year
-                      Center(
-                        child: Container(
-                          width: double.infinity,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: AppColors.mintPrimary.withValues(alpha: 0.2),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: AppColors.mintPrimary.withValues(
-                                alpha: 0.5,
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              // Year Selector
+                              Text(
+                                context.l10n.select_year,
+                                style: context.textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
-                              width: 1.5,
-                            ),
+                              const SizedBox(height: Spacing.s),
+                              SizedBox(
+                                height: 150,
+                                child: Stack(
+                                  children: [
+                                    // Background highlight for selected year
+                                    Center(
+                                      child: Container(
+                                        width: double.infinity,
+                                        height: 40,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.mintPrimary
+                                              .withValues(alpha: 0.2),
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                          border: Border.all(
+                                            color: AppColors.mintPrimary
+                                                .withValues(alpha: 0.5),
+                                            width: 1.5,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    // Year wheel scroll view
+                                    ListWheelScrollView(
+                                      controller: yearScrollController,
+                                      itemExtent: 40,
+                                      diameterRatio: 1.2,
+                                      physics: const FixedExtentScrollPhysics(),
+                                      onSelectedItemChanged: (index) {
+                                        selectedYear =
+                                            DateTime.now().year - 5 + index;
+                                      },
+                                      children: List.generate(11, (index) {
+                                        final year =
+                                            DateTime.now().year - 5 + index;
+                                        return Center(
+                                          child: Text(
+                                            year.toString(),
+                                            style: context.textTheme.bodyLarge
+                                                ?.copyWith(
+                                                  fontWeight: year == month.year
+                                                      ? FontWeight.w700
+                                                      : FontWeight.w400,
+                                                  color: year == selectedYear
+                                                      ? AppColors.mintPrimary
+                                                      : Colors.white,
+                                                ),
+                                          ),
+                                        );
+                                      }),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: Spacing.normal),
+                              // Month Selector
+                              Text(
+                                context.l10n.select_month,
+                                style: context.textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(height: Spacing.s),
+                              SizedBox(
+                                height: 150,
+                                child: Stack(
+                                  children: [
+                                    // Background highlight for selected month
+                                    Center(
+                                      child: Container(
+                                        width: double.infinity,
+                                        height: 40,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.mintPrimary
+                                              .withValues(alpha: 0.2),
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                          border: Border.all(
+                                            color: AppColors.mintPrimary
+                                                .withValues(alpha: 0.5),
+                                            width: 1.5,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    // Month wheel scroll view
+                                    ListWheelScrollView(
+                                      controller: monthScrollController,
+                                      itemExtent: 40,
+                                      diameterRatio: 1.2,
+                                      physics: const FixedExtentScrollPhysics(),
+                                      onSelectedItemChanged: (index) {
+                                        selectedMonth = index + 1;
+                                      },
+                                      children: List.generate(12, (index) {
+                                        final monthNum = index + 1;
+                                        return Center(
+                                          child: Text(
+                                            context.l10n.monthName(monthNum),
+                                            style: context.textTheme.bodyLarge
+                                                ?.copyWith(
+                                                  fontWeight:
+                                                      monthNum == month.month
+                                                      ? FontWeight.w700
+                                                      : FontWeight.w400,
+                                                  color:
+                                                      monthNum == selectedMonth
+                                                      ? AppColors.mintPrimary
+                                                      : Colors.white,
+                                                ),
+                                          ),
+                                        );
+                                      }),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                      // Year wheel scroll view
-                      ListWheelScrollView(
-                        controller: yearScrollController,
-                        itemExtent: 40,
-                        diameterRatio: 1.2,
-                        physics: const FixedExtentScrollPhysics(),
-                        onSelectedItemChanged: (index) {
-                          selectedYear = DateTime.now().year - 5 + index;
-                        },
-                        children: List.generate(11, (index) {
-                          final year = DateTime.now().year - 5 + index;
-                          return Center(
-                            child: Text(
-                              year.toString(),
-                              style: context.textTheme.bodyLarge?.copyWith(
-                                fontWeight: year == month.year
-                                    ? FontWeight.w700
-                                    : FontWeight.w400,
-                                color: year == selectedYear
-                                    ? AppColors.mintPrimary
-                                    : Colors.white,
-                              ),
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              yearScrollController.dispose();
+                              monthScrollController.dispose();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.redAccent,
+                              backgroundColor: Colors.transparent,
                             ),
-                          );
-                        }),
+                            child: Text(context.l10n.cancel),
+                          ),
+                          const SizedBox(width: 8),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              onMonthChanged(
+                                DateTime(selectedYear, selectedMonth),
+                              );
+                              yearScrollController.dispose();
+                              monthScrollController.dispose();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                            ),
+                            child: Text(context.l10n.confirm),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: Spacing.normal),
-                // Month Selector
-                Text(
-                  context.l10n.select_month,
-                  style: context.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: Spacing.s),
-                SizedBox(
-                  height: 150,
-                  child: Stack(
-                    children: [
-                      // Background highlight for selected month
-                      Center(
-                        child: Container(
-                          width: double.infinity,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: AppColors.mintPrimary.withValues(alpha: 0.2),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: AppColors.mintPrimary.withValues(
-                                alpha: 0.5,
-                              ),
-                              width: 1.5,
-                            ),
-                          ),
-                        ),
-                      ),
-                      // Month wheel scroll view
-                      ListWheelScrollView(
-                        controller: monthScrollController,
-                        itemExtent: 40,
-                        diameterRatio: 1.2,
-                        physics: const FixedExtentScrollPhysics(),
-                        onSelectedItemChanged: (index) {
-                          selectedMonth = index + 1;
-                        },
-                        children: List.generate(12, (index) {
-                          final monthNum = index + 1;
-                          return Center(
-                            child: Text(
-                              context.l10n.monthName(monthNum),
-                              style: context.textTheme.bodyLarge?.copyWith(
-                                fontWeight: monthNum == month.month
-                                    ? FontWeight.w700
-                                    : FontWeight.w400,
-                                color: monthNum == selectedMonth
-                                    ? AppColors.mintPrimary
-                                    : Colors.white,
-                              ),
-                            ),
-                          );
-                        }),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
-          actions: [
-            OutlinedButton(
-              style: OutlinedButton.styleFrom(
-                foregroundColor: AppColors.redPrimary,
-                side: BorderSide(
-                  color: AppColors.redPrimary.withValues(alpha: 0.5),
-                  width: 1.5,
-                ),
-                overlayColor: AppColors.redPrimary.withValues(alpha: 0.2),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: Spacing.normal,
-                  vertical: Spacing.s,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-                yearScrollController.dispose();
-                monthScrollController.dispose();
-              },
-              child: Text(context.l10n.cancel),
-            ),
-            FilledButton(
-              style: FilledButton.styleFrom(
-                backgroundColor: AppColors.mintPrimary.withValues(alpha: 0.2),
-                foregroundColor: AppColors.mintPrimary,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: Spacing.normal,
-                  vertical: Spacing.s,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-                onMonthChanged(DateTime(selectedYear, selectedMonth));
-                yearScrollController.dispose();
-                monthScrollController.dispose();
-              },
-              child: Text(context.l10n.confirm),
-            ),
-          ],
         );
       },
     );

@@ -314,21 +314,62 @@ class _GoalFormPageState extends State<GoalFormPage> {
     if (editing == null) return;
     final ok = await showDialog<bool>(
       context: context,
-      builder: (dialogCtx) => AlertDialog(
-        backgroundColor: const Color(0xFF2A2A3E),
-        title: Text(l10n.delete_goal_question),
-        content: Text(l10n.delete_goal_confirmation(editing.title)),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialogCtx).pop(false),
-            child: Text(l10n.cancel),
+      builder: (dialogCtx) => Dialog(
+        backgroundColor: Colors.transparent,
+        child: LiquidGlassLayer(
+          fake: false,
+          settings: LiquidGlassSettings(lightIntensity: 0),
+          child: LiquidGlass.grouped(
+            shape: const LiquidRoundedSuperellipse(borderRadius: 16),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    l10n.delete_goal_question,
+                    style: context.textTheme.titleLarge?.copyWith(
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    l10n.delete_goal_confirmation(editing.title),
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      color: Colors.white70,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () => Navigator.of(dialogCtx).pop(false),
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white70,
+                          backgroundColor: Colors.transparent,
+                        ),
+                        child: Text(l10n.cancel),
+                      ),
+                      const SizedBox(width: 8),
+                      ElevatedButton(
+                        onPressed: () => Navigator.of(dialogCtx).pop(true),
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: AppColors.redPrimary,
+                          backgroundColor: AppColors.redPrimary.withValues(
+                            alpha: 0.2,
+                          ),
+                        ),
+                        child: Text(l10n.delete_action),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
           ),
-          TextButton(
-            onPressed: () => Navigator.of(dialogCtx).pop(true),
-            style: TextButton.styleFrom(foregroundColor: Colors.redAccent),
-            child: Text(l10n.delete_action),
-          ),
-        ],
+        ),
       ),
     );
     if (ok != true) return;

@@ -1,32 +1,30 @@
-import 'package:artistplanner/core/blocs/lang/language_bloc.dart';
-import 'package:artistplanner/core/common/common.dart';
+import 'package:artistplanner/core/blocs/theme/theme_bloc.dart';
+import 'package:artistplanner/core/enums/enums.dart';
 import 'package:artistplanner/core/themes/themes.dart';
 import 'package:artistplanner/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 
-class ChangeLanguage extends StatefulWidget {
-  const ChangeLanguage({super.key});
+class ChangeTheme extends StatefulWidget {
+  const ChangeTheme({super.key});
 
   @override
-  State<ChangeLanguage> createState() => _ChangeLanguageState();
+  State<ChangeTheme> createState() => _ChangeThemeState();
 }
 
-class _ChangeLanguageState extends State<ChangeLanguage> {
-  late Locale _selectedLanguage;
+class _ChangeThemeState extends State<ChangeTheme> {
+  late ThemeColor _selectedTheme;
 
   @override
   void initState() {
     super.initState();
-    final languageState = context.read<LanguageBloc>().state;
-    _selectedLanguage = languageState.selectLanguage;
+    final themeState = context.read<ThemeBloc>().state;
+    _selectedTheme = themeState.selectTheme;
   }
 
-  void _onSaveLanguage() {
-    context.read<LanguageBloc>().add(
-      LanguageAppChange(locale: _selectedLanguage),
-    );
+  void _onSaveTheme() {
+    context.read<ThemeBloc>().add(ThemeAppChange(theme: _selectedTheme));
     Navigator.pop(context);
   }
 
@@ -48,30 +46,22 @@ class _ChangeLanguageState extends State<ChangeLanguage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  l10n.language,
+                  l10n.choose_theme,
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 const SizedBox(height: 12),
-                RadioGroup<Locale>(
-                  groupValue: _selectedLanguage,
+                RadioGroup<ThemeColor>(
+                  groupValue: _selectedTheme,
                   onChanged: (value) {
                     setState(() {
-                      _selectedLanguage = value!;
+                      _selectedTheme = value!;
                     });
                   },
-                  child: const Column(
+                  child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      _LanguageOption(
-                        locale: Locale('km'),
-                        label: 'ខ្មែរ',
-                        image: ImagePaths.kmFlag,
-                      ),
-                      _LanguageOption(
-                        locale: Locale('en'),
-                        label: 'English',
-                        image: ImagePaths.enFlag,
-                      ),
+                      for (final theme in ThemeColor.values)
+                        _ThemeOption(theme: theme, label: theme.labelOf(l10n)),
                     ],
                   ),
                 ),
@@ -89,7 +79,7 @@ class _ChangeLanguageState extends State<ChangeLanguage> {
                     ),
                     const SizedBox(width: 8),
                     ElevatedButton(
-                      onPressed: _onSaveLanguage,
+                      onPressed: _onSaveTheme,
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
                       ),
@@ -106,26 +96,36 @@ class _ChangeLanguageState extends State<ChangeLanguage> {
   }
 }
 
-class _LanguageOption extends StatelessWidget {
-  const _LanguageOption({
-    required this.locale,
-    required this.label,
-    required this.image,
-  });
+class _ThemeOption extends StatelessWidget {
+  const _ThemeOption({required this.theme, required this.label});
 
-  final Locale locale;
+  final ThemeColor theme;
   final String label;
-  final String image;
+
+  Color get _themeColor {
+    switch (theme) {
+      case ThemeColor.defaultTheme:
+        return AppColors.mintPrimary;
+      case ThemeColor.brownTheme:
+        return const Color(0xFFB8956A);
+      case ThemeColor.pinkTheme:
+        return const Color(0xFFE7A8FF);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: ClipRRect(
-        borderRadius: BorderRadius.circular(Raduis.sm),
-        child: Image.asset(image, width: 30, height: 20, fit: BoxFit.cover),
+      leading: Container(
+        width: 30,
+        height: 30,
+        decoration: BoxDecoration(
+          color: _themeColor,
+          borderRadius: BorderRadius.circular(Raduis.sm),
+        ),
       ),
       title: Text(label),
-      trailing: Radio<Locale>(value: locale),
+      trailing: Radio<ThemeColor>(value: theme),
     );
   }
 }
