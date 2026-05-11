@@ -279,27 +279,31 @@ class _OnBoardingViewState extends State<OnBoardingView> {
                                       ),
                                       GestureDetector(
                                         onTap: _onNextPressed,
-                                        child: LiquidGlass(
-                                          shape: const LiquidRoundedRectangle(
-                                            borderRadius: Raduis.l,
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: Spacing.normal,
+                                            vertical: Spacing.sm,
                                           ),
-                                          glassContainsChild: true,
-                                          child: Container(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: Spacing.normal,
-                                              vertical: Spacing.sm,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white.withValues(
+                                              alpha: 0.1,
                                             ),
-                                            child: Text(
-                                              _current == _contents.length - 1
-                                                  ? l10n.get_started
-                                                  : l10n.next,
-                                              style: context
-                                                  .textTheme
-                                                  .bodyMedium
-                                                  ?.copyWith(
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
+                                            borderRadius: BorderRadius.circular(
+                                              Raduis.l,
                                             ),
+                                            border: Border.all(
+                                              color: Colors.white,
+                                              width: 1.2,
+                                            ),
+                                          ),
+                                          child: Text(
+                                            _current == _contents.length - 1
+                                                ? l10n.get_started
+                                                : l10n.next,
+                                            style: context.textTheme.bodyMedium
+                                                ?.copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                           ),
                                         ),
                                       ),

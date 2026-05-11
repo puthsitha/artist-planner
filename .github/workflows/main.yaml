@@ -13,12 +13,97 @@ on:
       - main
 
 jobs:
-  semantic-pull-request:
-    uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/semantic_pull_request.yml@v1
-#   build:
-#     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
-#     with:
-#       flutter_version: "3.38.6"
+  # semantic-pull-request:
+  #   uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/semantic_pull_request.yml@v1
+
+  build-apk:
+    name: Build APK (Android)
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.38.6"
+          channel: "stable"
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build APK
+        run: flutter build apk --release
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 30
+
+      - name: Create Release
+        if: success()
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: android-${{ github.run_number }}
+          release_name: "Android Build #${{ github.run_number }}"
+          body: "APK built from commit ${{ github.sha }}"
+          draft: false
+          prerelease: false
+
+  build-ipa:
+    name: Build IPA (iOS)
+    runs-on: macos-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.38.6"
+          channel: "stable"
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build iOS
+        run: flutter build ios --release --no-codesign
+
+      - name: Create IPA
+        run: |
+          mkdir -p build/ipa
+          cd build/ios/Release-iphoneos
+          mkdir -p Payload
+          mv Runner.app Payload/
+          zip -r ../../ipa/Runner.ipa Payload
+          cd ../../..
+
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-ipa
+          path: build/ipa/Runner.ipa
+          retention-days: 30
+
+      - name: Create Release
+        if: success()
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ios-${{ github.run_number }}
+          release_name: "iOS Build #${{ github.run_number }}"
+          body: "IPA built from commit ${{ github.sha }}"
+          draft: false
+          prerelease: false
 
 #   spell-check:
 #     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/spell_check.yml@v1

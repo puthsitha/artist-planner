@@ -1,3 +1,4 @@
+import 'package:artistplanner/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 
 class NotFoundScreen extends StatefulWidget {
@@ -13,9 +14,10 @@ class NotFoundScreen extends StatefulWidget {
 class _NotFoundScreenState extends State<NotFoundScreen> {
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
-      appBar: AppBar(title: const Text('Not Found')),
-      body: const Center(child: Text('Hmmm... 404 - Page Not Found')),
+      appBar: AppBar(title: Text(l10n.not_found_title)),
+      body: Center(child: Text(l10n.not_found_message)),
     );
   }
 }

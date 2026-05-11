@@ -2,6 +2,7 @@
 
 import 'dart:math' as math;
 
+import 'package:artistplanner/core/extensions/extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 import 'package:motor/motor.dart';
@@ -243,8 +244,8 @@ class _BottomBarTab extends StatelessWidget {
                                 shape: BoxShape.circle,
                                 boxShadow: [
                                   BoxShadow(
-                                    color: tab.glowColor!.withOpacity(
-                                      selected ? 0.6 : 0,
+                                    color: tab.glowColor!.withValues(
+                                      alpha: selected ? 0.6 : 0,
                                     ),
                                     blurRadius: 32,
                                     spreadRadius: 8,
@@ -273,9 +274,8 @@ class _BottomBarTab extends StatelessWidget {
                 maxLines: 1,
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
+                style: context.textTheme.labelSmall?.copyWith(
                   color: iconColor,
-                  fontSize: 11,
                   fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
                 ),
               ),
