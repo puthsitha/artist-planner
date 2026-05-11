@@ -23,14 +23,30 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
+  late String _selectedBg;
+
   @override
   void initState() {
     _initSplashScreen();
+    _initBackground();
     super.initState();
   }
 
   void _initSplashScreen() {
     FlutterNativeSplash.remove();
+  }
+
+  void _initBackground() {
+    final bgCandidates = <String>[
+      ImagePaths.bg,
+      ImagePaths.bg1,
+      ImagePaths.bg2,
+      ImagePaths.bg3,
+    ]..removeWhere((e) => e.isEmpty);
+
+    _selectedBg = bgCandidates.isNotEmpty
+        ? bgCandidates[Random().nextInt(bgCandidates.length)]
+        : '';
   }
 
   ThemeData _themeFor(ThemeColor color) {
@@ -47,17 +63,6 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     final goRouter = AppRouter.router;
-    // Randomize background
-    final bgCandidates = <String>[
-      ImagePaths.bg,
-      ImagePaths.bg1,
-      ImagePaths.bg2,
-      ImagePaths.bg3,
-    ]..removeWhere((e) => e.isEmpty);
-
-    final bg = bgCandidates.isNotEmpty
-        ? bgCandidates[Random().nextInt(bgCandidates.length)]
-        : '';
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => LanguageBloc()),
@@ -93,12 +98,12 @@ class _AppState extends State<App> {
                   child: child!,
                 );
 
-                if (bg.isEmpty) return childToast;
+                if (_selectedBg.isEmpty) return childToast;
 
                 return Stack(
                   fit: StackFit.expand,
                   children: [
-                    Positioned.fill(child: Image.asset(bg, fit: BoxFit.cover)),
+                    Positioned.fill(child: Image.asset(_selectedBg, fit: BoxFit.cover)),
                     childToast,
                   ],
                 );
