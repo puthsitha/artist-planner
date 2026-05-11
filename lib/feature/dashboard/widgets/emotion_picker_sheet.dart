@@ -158,7 +158,7 @@ class _EmotionPickerSheetState extends State<EmotionPickerSheet> {
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         backgroundColor: _selected != null
-                            ? AppColors.mintPrimary
+                            ? context.colors.primary
                             : Colors.grey.withValues(alpha: 0.3),
                         foregroundColor: _selected != null
                             ? Colors.white
@@ -216,7 +216,7 @@ class _EmotionChip extends StatelessWidget {
               : Colors.white.withValues(alpha: 0.08),
           borderRadius: BorderRadius.circular(Raduis.xl),
           border: Border.all(
-            color: selected ? Colors.white : Colors.white24,
+            color: selected ? context.colors.primary : Colors.white24,
             width: selected ? 1.5 : 1,
           ),
         ),

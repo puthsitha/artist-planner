@@ -4,11 +4,13 @@ import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+const Color _pinkPrimary = Color(0xFFE7A8FF);
+
 const ColorScheme colorSchemePink = ColorScheme(
   surface: AppColors.primaryBg,
   onSurface: AppColors.secondaryBg,
-  primary: AppColors.primary,
-  onPrimary: AppColors.primary,
+  primary: _pinkPrimary,
+  onPrimary: _pinkPrimary,
   secondary: AppColors.secondary,
   secondaryContainer: Color(0xFF1A1A1A),
   onSecondary: Color(0xFF1A1A1A),
@@ -18,7 +20,7 @@ const ColorScheme colorSchemePink = ColorScheme(
 );
 
 final colorSchemePinkExt = AppColorScheme(
-  primary: AppColors.primary,
+  primary: _pinkPrimary,
   secondary: AppColors.secondary,
   primaryText: AppColors.primaryText,
   secondaryText: AppColors.secondaryText,
@@ -82,7 +84,7 @@ final pinkTheme = ThemeData(
     ),
   ),
 
-  scaffoldBackgroundColor: colorSchemePinkExt.lightShadeGrey10,
+  scaffoldBackgroundColor: colorSchemePinkExt.transparent,
 
   dividerTheme: DividerThemeData(
     thickness: 0.5,

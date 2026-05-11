@@ -1,3 +1,5 @@
+import 'package:artistplanner/core/blocs/theme/theme_bloc.dart';
+import 'package:artistplanner/core/enums/enums.dart';
 import 'package:artistplanner/core/extensions/extensions.dart';
 import 'package:artistplanner/core/models/models.dart';
 import 'package:artistplanner/core/themes/themes.dart';
@@ -10,9 +12,26 @@ import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 class MoodOverview extends StatelessWidget {
   const MoodOverview({super.key});
 
+  List<Color> _getGradientColors(ThemeColor theme) {
+    switch (theme) {
+      case ThemeColor.defaultTheme:
+        // Mint theme: Pink to Light Purple
+        return const [Color(0xFFFF7A99), Color(0xFFE7A8FF)];
+      case ThemeColor.brownTheme:
+        // Brown theme: Brown gradient
+        return const [Color(0xFFD4A574), Color(0xFFB8956A)];
+      case ThemeColor.pinkTheme:
+        // Pink theme: Deep Pink to Light Pink
+        return const [Color(0xFFE7A8FF), Color(0xFFF5C7FF)];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final theme = context.watch<ThemeBloc>().state.selectTheme;
+    final gradientColors = _getGradientColors(theme);
+
     return BlocBuilder<EmotionBloc, EmotionState>(
       builder: (context, state) {
         final today = DateTime.now();
@@ -58,13 +77,10 @@ class MoodOverview extends StatelessWidget {
                                 width: 14,
                                 height: _heightFor(byDay, d),
                                 decoration: BoxDecoration(
-                                  gradient: const LinearGradient(
+                                  gradient: LinearGradient(
                                     begin: Alignment.bottomCenter,
                                     end: Alignment.topCenter,
-                                    colors: [
-                                      Color(0xFFFF7A99),
-                                      Color(0xFFE7A8FF),
-                                    ],
+                                    colors: gradientColors,
                                   ),
                                   borderRadius: BorderRadius.circular(
                                     Raduis.sm,

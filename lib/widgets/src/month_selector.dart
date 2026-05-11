@@ -111,13 +111,13 @@ class MonthSelector extends StatelessWidget {
                                         width: double.infinity,
                                         height: 40,
                                         decoration: BoxDecoration(
-                                          color: AppColors.mintPrimary
+                                          color: context.colors.primary
                                               .withValues(alpha: 0.2),
                                           borderRadius: BorderRadius.circular(
                                             12,
                                           ),
                                           border: Border.all(
-                                            color: AppColors.mintPrimary
+                                            color: context.colors.primary
                                                 .withValues(alpha: 0.5),
                                             width: 1.5,
                                           ),
@@ -146,7 +146,7 @@ class MonthSelector extends StatelessWidget {
                                                       ? FontWeight.w700
                                                       : FontWeight.w400,
                                                   color: year == selectedYear
-                                                      ? AppColors.mintPrimary
+                                                      ? context.colors.primary
                                                       : Colors.white,
                                                 ),
                                           ),
@@ -175,13 +175,13 @@ class MonthSelector extends StatelessWidget {
                                         width: double.infinity,
                                         height: 40,
                                         decoration: BoxDecoration(
-                                          color: AppColors.mintPrimary
+                                          color: context.colors.primary
                                               .withValues(alpha: 0.2),
                                           borderRadius: BorderRadius.circular(
                                             12,
                                           ),
                                           border: Border.all(
-                                            color: AppColors.mintPrimary
+                                            color: context.colors.primary
                                                 .withValues(alpha: 0.5),
                                             width: 1.5,
                                           ),
@@ -210,7 +210,7 @@ class MonthSelector extends StatelessWidget {
                                                       : FontWeight.w400,
                                                   color:
                                                       monthNum == selectedMonth
-                                                      ? AppColors.mintPrimary
+                                                      ? context.colors.primary
                                                       : Colors.white,
                                                 ),
                                           ),

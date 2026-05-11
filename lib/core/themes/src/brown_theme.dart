@@ -4,11 +4,13 @@ import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+const Color _brownPrimary = Color(0xFFB8956A);
+
 const ColorScheme colorSchemeBrown = ColorScheme(
   surface: AppColors.primaryBg,
   onSurface: AppColors.secondaryBg,
-  primary: AppColors.primary,
-  onPrimary: AppColors.primary,
+  primary: _brownPrimary,
+  onPrimary: _brownPrimary,
   secondary: AppColors.secondary,
   secondaryContainer: Color(0xFF1A1A1A),
   onSecondary: Color(0xFF1A1A1A),
@@ -18,7 +20,7 @@ const ColorScheme colorSchemeBrown = ColorScheme(
 );
 
 final colorSchemeBrownExt = AppColorScheme(
-  primary: AppColors.primary,
+  primary: _brownPrimary,
   secondary: AppColors.secondary,
   primaryText: AppColors.primaryText,
   secondaryText: AppColors.secondaryText,
@@ -82,7 +84,7 @@ final brownTheme = ThemeData(
     ),
   ),
 
-  scaffoldBackgroundColor: colorSchemeBrownExt.lightShadeGrey10,
+  scaffoldBackgroundColor: colorSchemeBrownExt.transparent,
 
   dividerTheme: DividerThemeData(
     thickness: 0.5,

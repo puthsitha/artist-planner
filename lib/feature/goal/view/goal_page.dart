@@ -91,7 +91,10 @@ class _GoalViewState extends State<GoalView> {
           backgroundColor: Colors.transparent,
           appBar: AppBar(
             backgroundColor: Colors.transparent,
-            title: Text(l10n.goals_title),
+            title: Text(
+              l10n.goals_title,
+              style: TextStyle(color: AppColors.white),
+            ),
           ),
           floatingActionButton: SafeArea(
             child: Padding(
@@ -100,6 +103,7 @@ class _GoalViewState extends State<GoalView> {
               ),
               child: FloatingActionButton.extended(
                 foregroundColor: Colors.white,
+                backgroundColor: context.colors.primary,
                 onPressed: () => context.pushNamed(
                   Pages.goalForm.name,
                   extra: GoalFormArgs(
@@ -232,8 +236,8 @@ class _ProgressCard extends StatelessWidget {
                 value: progress,
                 minHeight: 10,
                 backgroundColor: Colors.white.withValues(alpha: 0.1),
-                valueColor: const AlwaysStoppedAnimation<Color>(
-                  AppColors.mintPrimary,
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  context.colors.primary,
                 ),
               ),
             ),

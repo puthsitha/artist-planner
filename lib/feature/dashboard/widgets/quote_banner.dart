@@ -1,3 +1,4 @@
+import 'package:artistplanner/core/blocs/lang/language_bloc.dart';
 import 'package:artistplanner/core/extensions/extensions.dart';
 import 'package:artistplanner/core/models/models.dart';
 import 'package:artistplanner/core/themes/themes.dart';
@@ -34,6 +35,7 @@ class QuoteBanner extends StatelessWidget {
                   height: 170,
                   viewportFraction: 1,
                   enlargeCenterPage: false,
+                  disableCenter: true,
                   autoPlay: true,
                   autoPlayInterval: const Duration(seconds: 6),
                   autoPlayAnimationDuration: const Duration(milliseconds: 700),
@@ -61,10 +63,12 @@ class _QuoteSlide extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isKhmer = context.watch<LanguageBloc>().state.selectLanguage == const Locale('km');
+
     return Padding(
       padding: const EdgeInsets.all(Spacing.normal),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Icon(
@@ -74,7 +78,7 @@ class _QuoteSlide extends StatelessWidget {
           ),
           const SizedBox(height: Spacing.xs),
           Text(
-            quote.text,
+            isKhmer ? quote.khmerText : quote.text,
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
             style: context.textTheme.bodyLarge?.copyWith(
@@ -85,7 +89,7 @@ class _QuoteSlide extends StatelessWidget {
           ),
           const Spacer(),
           Text(
-            '— ${quote.author}',
+            '— ${isKhmer ? quote.khmerAuthor : quote.author}',
             style: context.textTheme.bodySmall?.copyWith(
               color: Colors.white70,
               fontStyle: FontStyle.italic,

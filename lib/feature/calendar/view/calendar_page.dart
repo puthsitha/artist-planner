@@ -63,7 +63,10 @@ class _CalendarViewState extends State<CalendarView> {
       backgroundColor: Colors.transparent,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: Text(l10n.calendar_title),
+        title: Text(
+          l10n.calendar_title,
+          style: TextStyle(color: AppColors.white),
+        ),
       ),
       body: SafeArea(
         bottom: false,

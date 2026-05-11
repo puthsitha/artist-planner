@@ -159,8 +159,9 @@ class _SlotTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final hasEntry = entry != null;
-    return GestureDetector(
+    return InkWell(
       onTap: onTap,
+      borderRadius: BorderRadius.circular(22),
       child: LiquidGlass.grouped(
         shape: const LiquidRoundedSuperellipse(borderRadius: 22),
         child: Container(
@@ -248,8 +249,8 @@ class _MonthlyProgressCard extends StatelessWidget {
                     value: progress,
                     minHeight: 10,
                     backgroundColor: Colors.white.withValues(alpha: 0.12),
-                    valueColor: const AlwaysStoppedAnimation<Color>(
-                      Color(0xFFE7A8FF),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      context.colors.primary,
                     ),
                   ),
                 ),

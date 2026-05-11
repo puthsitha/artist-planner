@@ -192,7 +192,7 @@ class _GoalFormPageState extends State<GoalFormPage> {
                             colorScheme: Theme.of(context).colorScheme.copyWith(
                               surface: const Color(0xFF2B375F),
                               onSurface: Colors.white,
-                              primary: AppColors.mintPrimary,
+                              primary: context.colors.primary,
                               onPrimary: Colors.black,
                               onSurfaceVariant: Colors.white,
                             ),
@@ -235,15 +235,14 @@ class _GoalFormPageState extends State<GoalFormPage> {
                             onPressed: () =>
                                 Navigator.of(sheetContext).pop(selectedDate),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.mintPrimary.withValues(
-                                alpha: 0.5,
-                              ),
+                              backgroundColor: context.colors.primary
+                                  .withValues(alpha: 0.5),
                               foregroundColor: Colors.black,
                               padding: const EdgeInsets.symmetric(vertical: 14),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(18),
                                 side: BorderSide(
-                                  color: AppColors.mintPrimary,
+                                  color: context.colors.primary,
                                   width: 2,
                                 ),
                               ),
@@ -252,7 +251,7 @@ class _GoalFormPageState extends State<GoalFormPage> {
                               l10n.save,
                               style: context.textTheme.bodyMedium?.copyWith(
                                 fontWeight: FontWeight.w700,
-                                color: AppColors.mintPrimary,
+                                color: context.colors.primary,
                               ),
                             ),
                           ),
@@ -391,7 +390,10 @@ class _GoalFormPageState extends State<GoalFormPage> {
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => context.pop(),
         ),
-        title: Text(isEditing ? l10n.edit_goal : l10n.new_goal),
+        title: Text(
+          isEditing ? l10n.edit_goal : l10n.new_goal,
+          style: TextStyle(color: AppColors.white),
+        ),
         actions: [
           if (isEditing)
             IconButton(
@@ -555,7 +557,7 @@ class _GoalFormPageState extends State<GoalFormPage> {
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 14),
                             backgroundColor: _isTitleValid
-                                ? AppColors.mintPrimary
+                                ? context.colors.primary
                                 : Colors.grey.withValues(alpha: 0.3),
                             foregroundColor: _isTitleValid
                                 ? Colors.black

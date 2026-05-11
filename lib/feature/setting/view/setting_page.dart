@@ -55,7 +55,7 @@ class SettingView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: context.colors.transparent,
-        title: Text(l10n.setting),
+        title: Text(l10n.setting, style: TextStyle(color: AppColors.white)),
       ),
       body: LiquidGlassLayer(
         fake: !isGlassUI,
@@ -91,6 +91,10 @@ class SettingView extends StatelessWidget {
                                   child: GestureDetector(
                                     behavior: HitTestBehavior.opaque,
                                     child: ListTile(
+                                      shape: BeveledRectangleBorder(
+                                        borderRadius:
+                                            BorderRadiusGeometry.circular(20),
+                                      ),
                                       leading: const Icon(
                                         Icons.language,
                                         size: 40,
@@ -122,6 +126,10 @@ class SettingView extends StatelessWidget {
                                   child: GestureDetector(
                                     behavior: HitTestBehavior.opaque,
                                     child: ListTile(
+                                      shape: BeveledRectangleBorder(
+                                        borderRadius:
+                                            BorderRadiusGeometry.circular(20),
+                                      ),
                                       leading: const Icon(
                                         Icons.color_lens_rounded,
                                         size: 40,
@@ -151,6 +159,10 @@ class SettingView extends StatelessWidget {
                                 ),
                                 child: GlassGlow(
                                   child: SwitchListTile.adaptive(
+                                    shape: BeveledRectangleBorder(
+                                      borderRadius:
+                                          BorderRadiusGeometry.circular(20),
+                                    ),
                                     secondary: const Icon(
                                       Icons.auto_awesome,
                                       size: 40,
@@ -167,7 +179,7 @@ class SettingView extends StatelessWidget {
                                       style: context.textTheme.bodyLarge,
                                     ),
                                     value: isGlassUI,
-                                    activeTrackColor: const Color(0xFFE7A8FF),
+                                    activeTrackColor: context.colors.primary,
                                     onChanged: (value) => context
                                         .read<ThemeBloc>()
                                         .add(ThemeGlassToggled(enabled: value)),
