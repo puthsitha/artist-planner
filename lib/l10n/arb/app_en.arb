@@ -65,5 +65,320 @@
   "calender": "Calender",
   "@calender": {},
   "goal": "Goal",
-  "@goal": {}
+  "@goal": {},
+
+  "good_morning": "Good morning ✨",
+  "@good_morning": {},
+  "good_afternoon": "Good afternoon 🌿",
+  "@good_afternoon": {},
+  "good_evening": "Good evening 🌙",
+  "@good_evening": {},
+  "dashboard_kindness_subtitle": "Plant a small kindness in your day, artist.",
+  "@dashboard_kindness_subtitle": {},
+  "todays_emotion_check_ins": "Today's emotion check-ins",
+  "@todays_emotion_check_ins": {},
+  "tap_to_log": "Tap to log",
+  "@tap_to_log": {},
+  "this_months_goals": "This month's goals",
+  "@this_months_goals": {},
+  "no_goals_yet_dashboard": "No goals yet — add some on the Goal tab.",
+  "@no_goals_yet_dashboard": {},
+  "percent_complete": "{percent}% complete",
+  "@percent_complete": {
+    "placeholders": {
+      "percent": {
+        "type": "int",
+        "description": "Completion percentage"
+      }
+    }
+  },
+
+  "mood_this_week": "Mood this week",
+  "@mood_this_week": {},
+  "avg_score": "Avg score: {score} / 5",
+  "@avg_score": {
+    "placeholders": {
+      "score": {
+        "type": "String",
+        "description": "Average emotion score"
+      }
+    }
+  },
+
+  "calendar_title": "Calendar",
+  "@calendar_title": {},
+  "emotions_logged": "Emotions logged",
+  "@emotions_logged": {},
+  "goals_due": "Goals due",
+  "@goals_due": {},
+  "no_check_ins_for_day": "No check-ins yet for this day.",
+  "@no_check_ins_for_day": {},
+  "no_goals_due_for_day": "No goals due on this day.",
+  "@no_goals_due_for_day": {},
+
+  "goals_title": "Goals",
+  "@goals_title": {},
+  "new_goal": "New goal",
+  "@new_goal": {},
+  "edit_goal": "Edit goal",
+  "@edit_goal": {},
+  "delete_goal": "Delete goal",
+  "@delete_goal": {},
+  "delete_goal_question": "Delete goal?",
+  "@delete_goal_question": {},
+  "delete_goal_confirmation": "\"{title}\" will be removed permanently.",
+  "@delete_goal_confirmation": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "delete_action": "Delete",
+  "@delete_action": {},
+  "monthly_progress": "Monthly progress",
+  "@monthly_progress": {},
+  "no_goals_for_month": "No goals for this month yet.",
+  "@no_goals_for_month": {},
+  "end_of_month_reflection": "End-of-month reflection",
+  "@end_of_month_reflection": {},
+  "reflect": "Reflect",
+  "@reflect": {},
+  "edit_action": "Edit",
+  "@edit_action": {},
+  "month_wrap_up_hint": "The month is wrapping up. Take a moment to reflect — one phrase, optional notes, and a reward for yourself.",
+  "@month_wrap_up_hint": {},
+  "reward_label": "Reward: {reward}",
+  "@reward_label": {
+    "placeholders": {
+      "reward": {
+        "type": "String"
+      }
+    }
+  },
+  "add_category_goal": "Add a {category} goal",
+  "@add_category_goal": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "due_label": "Due {date}",
+  "@due_label": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "title_field": "Title",
+  "@title_field": {},
+  "title_hint": "What do you want to achieve?",
+  "@title_hint": {},
+  "description_optional": "Description (optional)",
+  "@description_optional": {},
+  "description_hint": "Add some context…",
+  "@description_hint": {},
+  "category_field": "Category",
+  "@category_field": {},
+  "priority_field": "Priority",
+  "@priority_field": {},
+  "due_date_optional": "Due date (optional)",
+  "@due_date_optional": {},
+  "no_due_date": "No due date",
+  "@no_due_date": {},
+  "add_goal": "Add goal",
+  "@add_goal": {},
+  "save_changes": "Save changes",
+  "@save_changes": {},
+
+  "reflect_on_month": "Reflect on {month} {year}",
+  "@reflect_on_month": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      },
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "reflection_in_one_phrase": "Reflection in one phrase",
+  "@reflection_in_one_phrase": {},
+  "reflection_phrase_hint": "In one phrase, this month was…",
+  "@reflection_phrase_hint": {},
+  "write_more_optional": "Write more (optional)",
+  "@write_more_optional": {},
+  "write_more_hint": "Wins, lessons, surprises, gratitudes…",
+  "@write_more_hint": {},
+  "reward_yourself": "Reward yourself",
+  "@reward_yourself": {},
+  "reward_hint": "A small treat to celebrate yourself…",
+  "@reward_hint": {},
+  "save_reflection": "Save reflection",
+  "@save_reflection": {},
+
+  "slot_check_in_title": "{slot} check-in",
+  "@slot_check_in_title": {
+    "placeholders": {
+      "slot": {
+        "type": "String"
+      }
+    }
+  },
+  "optional_emotion_note_hint": "Optional note about how you feel…",
+  "@optional_emotion_note_hint": {},
+  "save_check_in": "Save check-in",
+  "@save_check_in": {},
+
+  "glass_ui": "Glass UI",
+  "@glass_ui": {},
+  "glass_ui_on": "Liquid glass effects are on",
+  "@glass_ui_on": {},
+  "glass_ui_off": "Switched to a flat, lighter UI",
+  "@glass_ui_off": {},
+  "choose_theme": "Choose theme",
+  "@choose_theme": {},
+
+  "not_found_title": "Not Found",
+  "@not_found_title": {},
+  "not_found_message": "Hmmm... 404 - Page Not Found",
+  "@not_found_message": {},
+
+  "emotion_joyful": "Joyful",
+  "@emotion_joyful": {},
+  "emotion_grateful": "Grateful",
+  "@emotion_grateful": {},
+  "emotion_calm": "Calm",
+  "@emotion_calm": {},
+  "emotion_motivated": "Motivated",
+  "@emotion_motivated": {},
+  "emotion_tired": "Tired",
+  "@emotion_tired": {},
+  "emotion_anxious": "Anxious",
+  "@emotion_anxious": {},
+  "emotion_sad": "Sad",
+  "@emotion_sad": {},
+  "emotion_angry": "Angry",
+  "@emotion_angry": {},
+
+  "slot_morning": "Morning",
+  "@slot_morning": {},
+  "slot_afternoon": "Afternoon",
+  "@slot_afternoon": {},
+  "slot_evening": "Evening",
+  "@slot_evening": {},
+  "slot_morning_hint": "How are you starting your day?",
+  "@slot_morning_hint": {},
+  "slot_afternoon_hint": "How is your afternoon going?",
+  "@slot_afternoon_hint": {},
+  "slot_evening_hint": "How are you wrapping up your day?",
+  "@slot_evening_hint": {},
+
+  "category_career_education": "Career / Education",
+  "@category_career_education": {},
+  "category_personal_growth": "Personal Growth",
+  "@category_personal_growth": {},
+  "category_finance": "Finance",
+  "@category_finance": {},
+  "category_health": "Health",
+  "@category_health": {},
+  "category_self_love": "Self-Love",
+  "@category_self_love": {},
+  "category_relationship": "Relationship",
+  "@category_relationship": {},
+
+  "priority_high": "High",
+  "@priority_high": {},
+  "priority_medium": "Medium",
+  "@priority_medium": {},
+  "priority_low": "Low",
+  "@priority_low": {},
+
+  "theme_midnight_black": "Midnight Black",
+  "@theme_midnight_black": {},
+  "theme_warm_brown": "Warm Brown",
+  "@theme_warm_brown": {},
+  "theme_soft_pink": "Soft Pink",
+  "@theme_soft_pink": {},
+
+  "month_january": "January",
+  "@month_january": {},
+  "month_february": "February",
+  "@month_february": {},
+  "month_march": "March",
+  "@month_march": {},
+  "month_april": "April",
+  "@month_april": {},
+  "month_may": "May",
+  "@month_may": {},
+  "month_june": "June",
+  "@month_june": {},
+  "month_july": "July",
+  "@month_july": {},
+  "month_august": "August",
+  "@month_august": {},
+  "month_september": "September",
+  "@month_september": {},
+  "month_october": "October",
+  "@month_october": {},
+  "month_november": "November",
+  "@month_november": {},
+  "month_december": "December",
+  "@month_december": {},
+
+  "month_short_jan": "Jan",
+  "@month_short_jan": {},
+  "month_short_feb": "Feb",
+  "@month_short_feb": {},
+  "month_short_mar": "Mar",
+  "@month_short_mar": {},
+  "month_short_apr": "Apr",
+  "@month_short_apr": {},
+  "month_short_may": "May",
+  "@month_short_may": {},
+  "month_short_jun": "Jun",
+  "@month_short_jun": {},
+  "month_short_jul": "Jul",
+  "@month_short_jul": {},
+  "month_short_aug": "Aug",
+  "@month_short_aug": {},
+  "month_short_sep": "Sep",
+  "@month_short_sep": {},
+  "month_short_oct": "Oct",
+  "@month_short_oct": {},
+  "month_short_nov": "Nov",
+  "@month_short_nov": {},
+  "month_short_dec": "Dec",
+  "@month_short_dec": {},
+
+  "weekday_short_mon": "Mon",
+  "@weekday_short_mon": {},
+  "weekday_short_tue": "Tue",
+  "@weekday_short_tue": {},
+  "weekday_short_wed": "Wed",
+  "@weekday_short_wed": {},
+  "weekday_short_thu": "Thu",
+  "@weekday_short_thu": {},
+  "weekday_short_fri": "Fri",
+  "@weekday_short_fri": {},
+  "weekday_short_sat": "Sat",
+  "@weekday_short_sat": {},
+  "weekday_short_sun": "Sun",
+  "@weekday_short_sun": {},
+
+  "select_month_year": "Select Month & Year",
+  "@select_month_year": {},
+  "select_year": "Select Year",
+  "@select_year": {},
+  "select_month": "Select Month",
+  "@select_month": {},
+  "confirm": "Confirm",
+  "@confirm": {},
+  "tap_to_select": "Tap to select month & year",
+  "@tap_to_select": {},
+
+  "required": "Required",
+  "@required": {}
 }

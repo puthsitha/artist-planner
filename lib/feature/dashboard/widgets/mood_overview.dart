@@ -1,6 +1,8 @@
+import 'package:artistplanner/core/extensions/extensions.dart';
 import 'package:artistplanner/core/models/models.dart';
 import 'package:artistplanner/core/themes/themes.dart';
 import 'package:artistplanner/feature/dashboard/bloc/emotion_bloc.dart';
+import 'package:artistplanner/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
@@ -10,6 +12,7 @@ class MoodOverview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return BlocBuilder<EmotionBloc, EmotionState>(
       builder: (context, state) {
         final today = DateTime.now();
@@ -25,18 +28,19 @@ class MoodOverview extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Mood this week',
-                  style: TextStyle(
+                Text(
+                  l10n.mood_this_week,
+                  style: context.textTheme.titleMedium?.copyWith(
                     color: Colors.white,
-                    fontSize: 16,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
                 const SizedBox(height: Spacing.xs),
                 Text(
-                  'Avg score: ${state.averageScore().toStringAsFixed(1)} / 5',
-                  style: const TextStyle(color: Colors.white70, fontSize: 12),
+                  l10n.avg_score(state.averageScore().toStringAsFixed(1)),
+                  style: context.textTheme.labelSmall?.copyWith(
+                    color: Colors.white70,
+                  ),
                 ),
                 const SizedBox(height: Spacing.normal),
                 Row(
@@ -62,16 +66,17 @@ class MoodOverview extends StatelessWidget {
                                       Color(0xFFE7A8FF),
                                     ],
                                   ),
-                                  borderRadius: BorderRadius.circular(8),
+                                  borderRadius: BorderRadius.circular(
+                                    Raduis.sm,
+                                  ),
                                 ),
                               ),
                             ),
                             const SizedBox(height: 6),
                             Text(
-                              _weekday(d),
-                              style: const TextStyle(
+                              l10n.weekdayShort(d.weekday),
+                              style: context.textTheme.labelSmall?.copyWith(
                                 color: Colors.white60,
-                                fontSize: 11,
                               ),
                             ),
                           ],
@@ -93,10 +98,5 @@ class MoodOverview extends StatelessWidget {
     final entry = byDay[key];
     if (entry == null) return 6;
     return 12 + (entry.emotion.score * 9.0); // 21..57
-  }
-
-  static String _weekday(DateTime d) {
-    const labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    return labels[d.weekday - 1];
   }
 }

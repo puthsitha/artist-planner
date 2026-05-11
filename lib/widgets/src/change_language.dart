@@ -1,6 +1,7 @@
 import 'package:artistplanner/core/blocs/lang/language_bloc.dart';
 import 'package:artistplanner/core/blocs/theme/theme_bloc.dart';
 import 'package:artistplanner/core/common/common.dart';
+import 'package:artistplanner/core/themes/themes.dart';
 import 'package:artistplanner/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -135,7 +136,7 @@ class _LanguageOption extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       leading: ClipRRect(
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(Raduis.sm),
         child: Image.asset(image, width: 30, height: 20, fit: BoxFit.cover),
       ),
       title: Text(label),

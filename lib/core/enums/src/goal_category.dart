@@ -1,3 +1,4 @@
+import 'package:artistplanner/core/themes/themes.dart';
 import 'package:flutter/material.dart';
 
 enum GoalCategory {
@@ -47,7 +48,7 @@ enum GoalCategory {
       case GoalCategory.careerEducation:
         return const Color(0xFF6FA8FF);
       case GoalCategory.personalGrowth:
-        return const Color(0xFF7FE5B6);
+        return AppColors.mintPrimary;
       case GoalCategory.finance:
         return const Color(0xFFFFC97A);
       case GoalCategory.health:

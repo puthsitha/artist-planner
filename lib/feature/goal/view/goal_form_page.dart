@@ -1,12 +1,14 @@
 import 'package:artistplanner/core/blocs/theme/theme_bloc.dart';
-import 'package:artistplanner/core/common/common.dart';
 import 'package:artistplanner/core/enums/enums.dart';
+import 'package:artistplanner/core/extensions/extensions.dart';
 import 'package:artistplanner/core/models/models.dart';
 import 'package:artistplanner/core/themes/themes.dart';
 import 'package:artistplanner/feature/goal/bloc/goal_bloc.dart';
+import 'package:artistplanner/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 
 /// Arguments passed to [GoalFormPage] via go_router's `extra` field.
@@ -18,44 +20,45 @@ class GoalFormArgs {
     required this.year,
     required this.month,
     this.editing,
+    this.preSelectedCategory,
   });
 
   final int year;
   final int month;
   final MonthlyGoal? editing;
+  final GoalCategory? preSelectedCategory;
 }
 
 /// Full-screen create/update form for a [MonthlyGoal].
-///
-/// Replaces the previous bottom-sheet form. Drives navigation through
-/// `go_router`'s `context.pop()`. When [editing] is provided the AppBar
-/// surfaces a delete action.
 class GoalFormPage extends StatefulWidget {
   const GoalFormPage({
     required this.year,
     required this.month,
     this.editing,
+    this.preSelectedCategory,
     super.key,
   });
 
   final int year;
   final int month;
   final MonthlyGoal? editing;
+  final GoalCategory? preSelectedCategory;
 
   static MaterialPage<void> page({
     required int year,
     required int month,
     MonthlyGoal? editing,
+    GoalCategory? preSelectedCategory,
     Key? key,
-  }) =>
-      MaterialPage<void>(
-        child: GoalFormPage(
-          year: year,
-          month: month,
-          editing: editing,
-          key: key,
-        ),
-      );
+  }) => MaterialPage<void>(
+    child: GoalFormPage(
+      year: year,
+      month: month,
+      editing: editing,
+      preSelectedCategory: preSelectedCategory,
+      key: key,
+    ),
+  );
 
   @override
   State<GoalFormPage> createState() => _GoalFormPageState();
@@ -67,16 +70,28 @@ class _GoalFormPageState extends State<GoalFormPage> {
   late GoalCategory _category;
   late GoalPriority _priority;
   DateTime? _due;
+  bool _isTitleValid = false;
 
   @override
   void initState() {
     super.initState();
     final e = widget.editing;
-    _title = TextEditingController(text: e?.title ?? '');
+    _title = TextEditingController(text: e?.title ?? '')
+      ..addListener(_validateTitle);
     _desc = TextEditingController(text: e?.description ?? '');
-    _category = e?.category ?? GoalCategory.personalGrowth;
+    _category =
+        widget.preSelectedCategory ??
+        e?.category ??
+        GoalCategory.personalGrowth;
     _priority = e?.priority ?? GoalPriority.medium;
     _due = e?.dueDate;
+    _isTitleValid = _title.text.trim().isNotEmpty;
+  }
+
+  void _validateTitle() {
+    setState(() {
+      _isTitleValid = _title.text.trim().isNotEmpty;
+    });
   }
 
   @override
@@ -87,15 +102,176 @@ class _GoalFormPageState extends State<GoalFormPage> {
   }
 
   Future<void> _pickDue() async {
-    final first = DateTime(widget.year, widget.month);
+    final now = DateTime.now();
+    final first = DateTime(now.year, now.month, now.day);
     final last = DateTime(widget.year, widget.month + 1, 0);
-    final picked = await showDatePicker(
-      context: context,
+    final picked = await _showFriendlyDatePicker(
+      initialDate: _due ?? first,
       firstDate: first,
       lastDate: last,
-      initialDate: _due ?? first,
     );
     if (picked != null) setState(() => _due = picked);
+  }
+
+  Future<DateTime?> _showFriendlyDatePicker({
+    required DateTime initialDate,
+    required DateTime firstDate,
+    required DateTime lastDate,
+  }) async {
+    final l10n = context.l10n;
+    DateTime selectedDate = initialDate;
+    print("lastDate : $lastDate");
+    return showModalBottomSheet<DateTime>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (sheetContext) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return SafeArea(
+              top: false,
+              child: Container(
+                margin: const EdgeInsets.only(top: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 16,
+                ),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surface,
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(32),
+                  ),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 24,
+                      offset: Offset(0, -6),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  // crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Container(
+                      width: 46,
+                      height: 4,
+                      margin: const EdgeInsets.only(bottom: 16),
+                      decoration: BoxDecoration(
+                        color: Colors.white24,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                    Text(
+                      l10n.due_date_optional,
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        color: Colors.white70,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      _friendlyFormatDate(selectedDate),
+                      style: context.textTheme.headlineSmall?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 16),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(24),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF2B375F),
+                          borderRadius: BorderRadius.circular(24),
+                          border: Border.all(color: Colors.white12),
+                        ),
+                        child: Theme(
+                          data: Theme.of(context).copyWith(
+                            colorScheme: Theme.of(context).colorScheme.copyWith(
+                              surface: const Color(0xFF2B375F),
+                              onSurface: Colors.white,
+                              primary: AppColors.mintPrimary,
+                              onPrimary: Colors.black,
+                              onSurfaceVariant: Colors.white,
+                            ),
+                            textTheme: Theme.of(context).textTheme.apply(
+                              bodyColor: Colors.white,
+                              displayColor: Colors.white,
+                            ),
+                          ),
+                          child: CalendarDatePicker(
+                            initialDate: selectedDate,
+                            firstDate: firstDate,
+                            lastDate: lastDate,
+                            currentDate: DateTime.now(),
+                            onDateChanged: (value) =>
+                                setState(() => selectedDate = value),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: () => Navigator.of(sheetContext).pop(),
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: Colors.white70,
+                              side: const BorderSide(color: Colors.white24),
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18),
+                              ),
+                            ),
+                            child: Text(l10n.cancel),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () =>
+                                Navigator.of(sheetContext).pop(selectedDate),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.mintPrimary.withValues(
+                                alpha: 0.5,
+                              ),
+                              foregroundColor: Colors.black,
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18),
+                                side: BorderSide(
+                                  color: AppColors.mintPrimary,
+                                  width: 2,
+                                ),
+                              ),
+                            ),
+                            child: Text(
+                              l10n.save,
+                              style: context.textTheme.bodyMedium?.copyWith(
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.mintPrimary,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  String _friendlyFormatDate(DateTime date) {
+    final locale = Localizations.localeOf(context).toString();
+    return DateFormat.yMMMMd(locale).format(date);
   }
 
   void _submit() {
@@ -133,22 +309,24 @@ class _GoalFormPageState extends State<GoalFormPage> {
   }
 
   Future<void> _confirmDelete() async {
+    final l10n = context.l10n;
     final editing = widget.editing;
     if (editing == null) return;
     final ok = await showDialog<bool>(
       context: context,
       builder: (dialogCtx) => AlertDialog(
-        title: const Text('Delete goal?'),
-        content: Text('"${editing.title}" will be removed permanently.'),
+        backgroundColor: const Color(0xFF2A2A3E),
+        title: Text(l10n.delete_goal_question),
+        content: Text(l10n.delete_goal_confirmation(editing.title)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogCtx).pop(false),
-            child: const Text('Cancel'),
+            child: Text(l10n.cancel),
           ),
           TextButton(
             onPressed: () => Navigator.of(dialogCtx).pop(true),
             style: TextButton.styleFrom(foregroundColor: Colors.redAccent),
-            child: const Text('Delete'),
+            child: Text(l10n.delete_action),
           ),
         ],
       ),
@@ -161,6 +339,7 @@ class _GoalFormPageState extends State<GoalFormPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final isEditing = widget.editing != null;
     final fakeGlass = !context.watch<ThemeBloc>().state.isGlassUI;
     return Scaffold(
@@ -171,15 +350,12 @@ class _GoalFormPageState extends State<GoalFormPage> {
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => context.pop(),
         ),
-        title: Text(isEditing ? 'Edit goal' : 'New goal'),
+        title: Text(isEditing ? l10n.edit_goal : l10n.new_goal),
         actions: [
           if (isEditing)
             IconButton(
-              icon: const Icon(
-                Icons.delete_outline,
-                color: Colors.white,
-              ),
-              tooltip: 'Delete goal',
+              icon: const Icon(Icons.delete_outline, color: Colors.white),
+              tooltip: l10n.delete_goal,
               onPressed: _confirmDelete,
             ),
         ],
@@ -203,22 +379,57 @@ class _GoalFormPageState extends State<GoalFormPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const _FieldLabel('Title'),
+                      Row(
+                        children: [
+                          _FieldLabel(l10n.title_field),
+                          if (!_isTitleValid)
+                            Text(
+                              '(${l10n.required})',
+                              style: context.textTheme.labelSmall?.copyWith(
+                                color: AppColors.redPrimary,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                        ],
+                      ),
                       TextField(
                         controller: _title,
-                        style: const TextStyle(color: Colors.white),
-                        decoration: _decoration('What do you want to achieve?'),
+                        style: context.textTheme.bodyMedium?.copyWith(
+                          color: Colors.white,
+                        ),
+                        decoration: _decoration(l10n.title_hint).copyWith(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(Raduis.xl),
+                            borderSide: BorderSide(
+                              color: !_isTitleValid
+                                  ? AppColors.redPrimary.withValues(alpha: 0.5)
+                                  : Colors.transparent,
+                              width: !_isTitleValid ? 1.5 : 0,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(Raduis.xl),
+                            borderSide: BorderSide(
+                              color: !_isTitleValid
+                                  ? AppColors.redPrimary.withValues(alpha: 0.5)
+                                  : Colors.transparent,
+                              width: !_isTitleValid ? 1.5 : 0,
+                            ),
+                          ),
+                        ),
                       ),
                       const SizedBox(height: Spacing.sm),
-                      const _FieldLabel('Description (optional)'),
+                      _FieldLabel(l10n.description_optional),
                       TextField(
                         controller: _desc,
                         maxLines: 3,
-                        style: const TextStyle(color: Colors.white),
-                        decoration: _decoration('Add some context…'),
+                        style: context.textTheme.bodyMedium?.copyWith(
+                          color: Colors.white,
+                        ),
+                        decoration: _decoration(l10n.description_hint),
                       ),
                       const SizedBox(height: Spacing.sm),
-                      const _FieldLabel('Category'),
+                      _FieldLabel(l10n.category_field),
                       Wrap(
                         spacing: 8,
                         runSpacing: 8,
@@ -232,7 +443,7 @@ class _GoalFormPageState extends State<GoalFormPage> {
                         ],
                       ),
                       const SizedBox(height: Spacing.sm),
-                      const _FieldLabel('Priority'),
+                      _FieldLabel(l10n.priority_field),
                       Row(
                         children: [
                           for (final p in GoalPriority.values) ...[
@@ -252,17 +463,20 @@ class _GoalFormPageState extends State<GoalFormPage> {
                                           ? p.color
                                           : Colors.white24,
                                     ),
-                                    borderRadius: BorderRadius.circular(14),
+                                    borderRadius: BorderRadius.circular(
+                                      Raduis.l,
+                                    ),
                                   ),
                                   alignment: Alignment.center,
                                   child: Text(
-                                    p.label,
-                                    style: TextStyle(
-                                      color: _priority == p
-                                          ? p.color
-                                          : Colors.white70,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                                    p.labelOf(l10n),
+                                    style: context.textTheme.bodySmall
+                                        ?.copyWith(
+                                          color: _priority == p
+                                              ? p.color
+                                              : Colors.white70,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                   ),
                                 ),
                               ),
@@ -273,7 +487,7 @@ class _GoalFormPageState extends State<GoalFormPage> {
                         ],
                       ),
                       const SizedBox(height: Spacing.sm),
-                      const _FieldLabel('Due date (optional)'),
+                      _FieldLabel(l10n.due_date_optional),
                       Row(
                         children: [
                           Expanded(
@@ -285,9 +499,11 @@ class _GoalFormPageState extends State<GoalFormPage> {
                               ),
                               label: Text(
                                 _due == null
-                                    ? 'No due date'
+                                    ? l10n.no_due_date
                                     : '${_due!.year}-${_due!.month.toString().padLeft(2, '0')}-${_due!.day.toString().padLeft(2, '0')}',
-                                style: const TextStyle(color: Colors.white),
+                                style: context.textTheme.bodyMedium?.copyWith(
+                                  color: Colors.white,
+                                ),
                               ),
                               style: OutlinedButton.styleFrom(
                                 padding: const EdgeInsets.symmetric(
@@ -313,12 +529,30 @@ class _GoalFormPageState extends State<GoalFormPage> {
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: _submit,
+                          onPressed: _isTitleValid ? _submit : null,
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 14),
+                            backgroundColor: _isTitleValid
+                                ? AppColors.mintPrimary
+                                : Colors.grey.withValues(alpha: 0.3),
+                            foregroundColor: _isTitleValid
+                                ? Colors.black
+                                : Colors.grey.withValues(alpha: 0.6),
+                            disabledBackgroundColor: Colors.grey.withValues(
+                              alpha: 0.3,
+                            ),
+                            disabledForegroundColor: Colors.grey.withValues(
+                              alpha: 0.6,
+                            ),
                           ),
                           child: Text(
-                            isEditing ? 'Save changes' : 'Add goal',
+                            isEditing ? l10n.save_changes : l10n.add_goal,
+                            style: context.textTheme.labelLarge?.copyWith(
+                              color: _isTitleValid
+                                  ? Colors.white
+                                  : Colors.grey.withValues(alpha: 0.6),
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                         ),
                       ),
@@ -327,7 +561,6 @@ class _GoalFormPageState extends State<GoalFormPage> {
                 ),
               ),
             ),
-            SizedBox(height: kBottomNavBarHeight + Spacing.l7),
           ],
         ),
       ),
@@ -337,11 +570,11 @@ class _GoalFormPageState extends State<GoalFormPage> {
   InputDecoration _decoration(String hint) {
     return InputDecoration(
       hintText: hint,
-      hintStyle: const TextStyle(color: Colors.white54),
+      hintStyle: context.textTheme.bodyMedium?.copyWith(color: Colors.white54),
       filled: true,
       fillColor: Colors.white.withValues(alpha: 0.08),
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(Raduis.xl),
         borderSide: BorderSide.none,
       ),
     );
@@ -358,9 +591,8 @@ class _FieldLabel extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 6, top: 4),
       child: Text(
         text,
-        style: const TextStyle(
+        style: context.textTheme.labelSmall?.copyWith(
           color: Colors.white70,
-          fontSize: 12,
           fontWeight: FontWeight.w600,
         ),
       ),
@@ -381,6 +613,7 @@ class _CategoryChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
@@ -390,7 +623,7 @@ class _CategoryChip extends StatelessWidget {
           color: selected
               ? category.accent.withValues(alpha: 0.25)
               : Colors.white.withValues(alpha: 0.06),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(Raduis.xl),
           border: Border.all(
             color: selected ? category.accent : Colors.white24,
           ),
@@ -401,8 +634,8 @@ class _CategoryChip extends StatelessWidget {
             Icon(category.icon, size: 16, color: category.accent),
             const SizedBox(width: 6),
             Text(
-              category.label,
-              style: const TextStyle(color: Colors.white),
+              category.labelOf(l10n),
+              style: context.textTheme.bodySmall?.copyWith(color: Colors.white),
             ),
           ],
         ),

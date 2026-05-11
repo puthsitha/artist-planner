@@ -289,7 +289,7 @@ class _OnBoardingViewState extends State<OnBoardingView> {
                                               alpha: 0.1,
                                             ),
                                             borderRadius: BorderRadius.circular(
-                                              14,
+                                              Raduis.l,
                                             ),
                                             border: Border.all(
                                               color: Colors.white,

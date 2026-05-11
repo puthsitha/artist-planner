@@ -1,3 +1,4 @@
+import 'package:artistplanner/core/extensions/extensions.dart';
 import 'package:artistplanner/core/models/models.dart';
 import 'package:artistplanner/core/themes/themes.dart';
 import 'package:artistplanner/feature/dashboard/bloc/quote_cubit.dart';
@@ -26,7 +27,7 @@ class QuoteBanner extends StatelessWidget {
           child: SizedBox(
             height: 170,
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(28),
+              borderRadius: BorderRadius.circular(Raduis.xl),
               child: CarouselSlider.builder(
                 itemCount: state.quotes.length,
                 options: CarouselOptions(
@@ -76,8 +77,7 @@ class _QuoteSlide extends StatelessWidget {
             quote.text,
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              fontSize: 16,
+            style: context.textTheme.bodyLarge?.copyWith(
               fontWeight: FontWeight.w600,
               color: Colors.white,
               height: 1.35,
@@ -86,9 +86,8 @@ class _QuoteSlide extends StatelessWidget {
           const Spacer(),
           Text(
             '— ${quote.author}',
-            style: const TextStyle(
+            style: context.textTheme.bodySmall?.copyWith(
               color: Colors.white70,
-              fontSize: 13,
               fontStyle: FontStyle.italic,
             ),
           ),

@@ -146,23 +146,26 @@ class AppRouter {
                         pageBuilder: (context, state) {
                           return GoalPage.page(key: state.pageKey);
                         },
-                      ),
-                      GoRoute(
-                        name: Pages.goalForm.name,
-                        parentNavigatorKey: goalShellNavigatorKey,
-                        path: 'goal-form',
-                        pageBuilder: (context, state) {
-                          final args = state.extra as GoalFormArgs?;
-                          if (args == null) {
-                            return NotFoundScreen.page(key: state.pageKey);
-                          }
-                          return GoalFormPage.page(
-                            key: state.pageKey,
-                            year: args.year,
-                            month: args.month,
-                            editing: args.editing,
-                          );
-                        },
+                        routes: [
+                          GoRoute(
+                            name: Pages.goalForm.name,
+                            path: 'goal-form',
+                            parentNavigatorKey: rootNavigatorKey,
+                            pageBuilder: (context, state) {
+                              final args = state.extra as GoalFormArgs?;
+                              if (args == null) {
+                                return NotFoundScreen.page(key: state.pageKey);
+                              }
+                              return GoalFormPage.page(
+                                key: state.pageKey,
+                                year: args.year,
+                                month: args.month,
+                                editing: args.editing,
+                                preSelectedCategory: args.preSelectedCategory,
+                              );
+                            },
+                          ),
+                        ],
                       ),
                     ],
                   ),

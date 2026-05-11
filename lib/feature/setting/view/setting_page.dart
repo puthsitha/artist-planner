@@ -36,14 +36,17 @@ class SettingView extends StatelessWidget {
   Future<void> _showThemeDialog(BuildContext context) async {
     final bloc = context.read<ThemeBloc>();
     final current = bloc.state.selectTheme;
+    final l10n = context.l10n;
     await showDialog<void>(
       context: context,
       builder: (dialogCtx) {
         return AlertDialog(
           backgroundColor: const Color(0xFF1B1625),
-          title: const Text(
-            'Choose theme',
-            style: TextStyle(color: Colors.white),
+          title: Text(
+            l10n.choose_theme,
+            style: context.textTheme.headlineSmall?.copyWith(
+              color: Colors.white,
+            ),
           ),
           content: RadioGroup<ThemeColor>(
             groupValue: current,
@@ -61,8 +64,10 @@ class SettingView extends StatelessWidget {
                     value: t,
                     activeColor: const Color(0xFFE7A8FF),
                     title: Text(
-                      t.label,
-                      style: const TextStyle(color: Colors.white),
+                      t.labelOf(l10n),
+                      style: context.textTheme.bodyLarge?.copyWith(
+                        color: Colors.white,
+                      ),
                     ),
                   ),
               ],
@@ -194,13 +199,13 @@ class SettingView extends StatelessWidget {
                                       color: Color(0xFFE7A8FF),
                                     ),
                                     title: Text(
-                                      'Glass UI',
+                                      l10n.glass_ui,
                                       style: context.textTheme.titleLarge,
                                     ),
                                     subtitle: Text(
                                       isGlassUI
-                                          ? 'Liquid glass effects are on'
-                                          : 'Switched to a flat, lighter UI',
+                                          ? l10n.glass_ui_on
+                                          : l10n.glass_ui_off,
                                       style: context.textTheme.bodyLarge,
                                     ),
                                     value: isGlassUI,

@@ -37,6 +37,7 @@ final colorSchemeDarkExt = AppColorScheme(
   blueLight: AppColors.darkCyanBlue,
   greyLight: AppColors.greenLight,
   redPrimary: AppColors.redPrimary,
+  mintPrimary: AppColors.mintPrimary,
   greyPrimary: AppColors.grey,
   greyDark: AppColors.darkShadeGrey90,
   greySecondary: AppColors.darkShadeGrey60,

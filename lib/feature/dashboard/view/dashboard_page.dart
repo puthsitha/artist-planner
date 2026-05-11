@@ -1,6 +1,7 @@
 import 'package:artistplanner/core/blocs/theme/theme_bloc.dart';
 import 'package:artistplanner/core/common/common.dart';
 import 'package:artistplanner/core/enums/enums.dart';
+import 'package:artistplanner/core/extensions/extensions.dart';
 import 'package:artistplanner/core/models/models.dart';
 import 'package:artistplanner/core/themes/themes.dart';
 import 'package:artistplanner/feature/dashboard/bloc/emotion_bloc.dart';
@@ -8,6 +9,7 @@ import 'package:artistplanner/feature/dashboard/widgets/emotion_picker_sheet.dar
 import 'package:artistplanner/feature/dashboard/widgets/mood_overview.dart';
 import 'package:artistplanner/feature/dashboard/widgets/quote_banner.dart';
 import 'package:artistplanner/feature/goal/bloc/goal_bloc.dart';
+import 'package:artistplanner/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
@@ -27,16 +29,17 @@ class DashboardPage extends StatelessWidget {
 class DashboardView extends StatelessWidget {
   const DashboardView({super.key});
 
-  String _greeting() {
+  String _greeting(AppLocalizations l10n) {
     final h = DateTime.now().hour;
-    if (h < 12) return 'Good morning ✨';
-    if (h < 18) return 'Good afternoon 🌿';
-    return 'Good evening 🌙';
+    if (h < 12) return l10n.good_morning;
+    if (h < 18) return l10n.good_afternoon;
+    return l10n.good_evening;
   }
 
   @override
   Widget build(BuildContext context) {
     final today = DateTime.now();
+    final l10n = context.l10n;
     final fakeGlass = !context.watch<ThemeBloc>().state.isGlassUI;
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -50,17 +53,17 @@ class DashboardView extends StatelessWidget {
           ),
           children: [
             Text(
-              _greeting(),
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w700,
+              _greeting(l10n),
+              style: context.textTheme.headlineLarge?.copyWith(
                 color: Colors.white,
               ),
             ),
             const SizedBox(height: Spacing.xs),
             Text(
-              'Plant a small kindness in your day, artist.',
-              style: TextStyle(color: Colors.white.withValues(alpha: 0.75)),
+              l10n.dashboard_kindness_subtitle,
+              style: context.textTheme.bodyMedium?.copyWith(
+                color: Colors.white.withValues(alpha: 0.75),
+              ),
             ),
             const SizedBox(height: Spacing.normal),
             LiquidGlassLayer(
@@ -101,16 +104,16 @@ class _DailyCheckInRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return BlocBuilder<EmotionBloc, EmotionState>(
       builder: (context, state) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "Today's emotion check-ins",
-              style: TextStyle(
+            Text(
+              l10n.todays_emotion_check_ins,
+              style: context.textTheme.titleMedium?.copyWith(
                 color: Colors.white,
-                fontSize: 16,
                 fontWeight: FontWeight.w700,
               ),
             ),
@@ -154,6 +157,7 @@ class _SlotTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final hasEntry = entry != null;
     return GestureDetector(
       onTap: onTap,
@@ -168,21 +172,22 @@ class _SlotTile extends StatelessWidget {
             children: [
               Text(
                 hasEntry ? entry!.emotion.emoji : '＋',
-                style: const TextStyle(fontSize: 30),
+                style: context.textTheme.headlineLarge,
               ),
               const SizedBox(height: 4),
               Text(
-                slot.label,
-                style: const TextStyle(
+                slot.labelOf(l10n),
+                style: context.textTheme.bodySmall?.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.w600,
-                  fontSize: 13,
                 ),
               ),
               const SizedBox(height: 2),
               Text(
-                hasEntry ? entry!.emotion.label : 'Tap to log',
-                style: const TextStyle(color: Colors.white60, fontSize: 11),
+                hasEntry ? entry!.emotion.labelOf(l10n) : l10n.tap_to_log,
+                style: context.textTheme.labelSmall?.copyWith(
+                  color: Colors.white60,
+                ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -202,6 +207,7 @@ class _MonthlyProgressCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return BlocBuilder<GoalBloc, GoalState>(
       builder: (context, state) {
         final progress = state.progressForMonth(year, month);
@@ -218,25 +224,26 @@ class _MonthlyProgressCard extends StatelessWidget {
                   children: [
                     const Icon(Icons.flag_rounded, color: Colors.white),
                     const SizedBox(width: 8),
-                    const Expanded(
+                    Expanded(
                       child: Text(
-                        "This month's goals",
-                        style: TextStyle(
+                        l10n.this_months_goals,
+                        style: context.textTheme.titleMedium?.copyWith(
                           color: Colors.white,
-                          fontSize: 16,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
                     ),
                     Text(
                       '$completed/${goals.length}',
-                      style: const TextStyle(color: Colors.white70),
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        color: Colors.white70,
+                      ),
                     ),
                   ],
                 ),
                 const SizedBox(height: Spacing.sm),
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(Raduis.normal),
                   child: LinearProgressIndicator(
                     value: progress,
                     minHeight: 10,
@@ -249,9 +256,11 @@ class _MonthlyProgressCard extends StatelessWidget {
                 const SizedBox(height: Spacing.sm),
                 Text(
                   goals.isEmpty
-                      ? 'No goals yet — add some on the Goal tab.'
-                      : '${(progress * 100).round()}% complete',
-                  style: const TextStyle(color: Colors.white70, fontSize: 12),
+                      ? l10n.no_goals_yet_dashboard
+                      : l10n.percent_complete((progress * 100).round()),
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: Colors.white70,
+                  ),
                 ),
               ],
             ),

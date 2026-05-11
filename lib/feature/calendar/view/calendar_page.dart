@@ -1,11 +1,14 @@
 import 'package:artistplanner/core/blocs/theme/theme_bloc.dart';
 import 'package:artistplanner/core/common/common.dart';
 import 'package:artistplanner/core/enums/enums.dart';
+import 'package:artistplanner/core/extensions/extensions.dart';
 import 'package:artistplanner/core/models/models.dart';
 import 'package:artistplanner/core/themes/themes.dart';
 import 'package:artistplanner/feature/dashboard/bloc/emotion_bloc.dart';
 import 'package:artistplanner/feature/dashboard/widgets/emotion_picker_sheet.dart';
 import 'package:artistplanner/feature/goal/bloc/goal_bloc.dart';
+import 'package:artistplanner/l10n/l10n.dart';
+import 'package:artistplanner/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
@@ -49,6 +52,7 @@ class _CalendarViewState extends State<CalendarView> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final emotionState = context.watch<EmotionBloc>().state;
     final goalState = context.watch<GoalBloc>().state;
     final byDay = emotionState.latestByDay();
@@ -59,7 +63,7 @@ class _CalendarViewState extends State<CalendarView> {
       backgroundColor: Colors.transparent,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const Text('Calendar'),
+        title: Text(l10n.calendar_title),
       ),
       body: SafeArea(
         bottom: false,
@@ -73,8 +77,10 @@ class _CalendarViewState extends State<CalendarView> {
             LiquidGlassLayer(
               fake: fakeGlass,
               settings: LiquidGlassSettings(),
-              child: _MonthHeader(
+              child: MonthSelector(
                 month: _viewMonth,
+                onMonthChanged: (newMonth) =>
+                    setState(() => _viewMonth = newMonth),
                 onPrev: () => _shiftMonth(-1),
                 onNext: () => _shiftMonth(1),
               ),
@@ -118,70 +124,6 @@ class _CalendarViewState extends State<CalendarView> {
       a.year == b.year && a.month == b.month && a.day == b.day;
 }
 
-class _MonthHeader extends StatelessWidget {
-  const _MonthHeader({
-    required this.month,
-    required this.onPrev,
-    required this.onNext,
-  });
-
-  final DateTime month;
-  final VoidCallback onPrev;
-  final VoidCallback onNext;
-
-  static const _names = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return LiquidGlass.grouped(
-      shape: const LiquidRoundedSuperellipse(borderRadius: 24),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: Spacing.normal,
-          vertical: Spacing.s,
-        ),
-        child: Row(
-          children: [
-            IconButton(
-              onPressed: onPrev,
-              icon: const Icon(Icons.chevron_left, color: Colors.white),
-            ),
-            Expanded(
-              child: Center(
-                child: Text(
-                  '${_names[month.month - 1]} ${month.year}',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            ),
-            IconButton(
-              onPressed: onNext,
-              icon: const Icon(Icons.chevron_right, color: Colors.white),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class _CalendarGrid extends StatelessWidget {
   const _CalendarGrid({
     required this.month,
@@ -199,6 +141,7 @@ class _CalendarGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final firstDay = DateTime(month.year, month.month);
     final daysInMonth = DateTime(month.year, month.month + 1, 0).day;
     final leadingBlanks = (firstDay.weekday - 1) % 7;
@@ -213,14 +156,14 @@ class _CalendarGrid extends StatelessWidget {
         child: Column(
           children: [
             Row(
-              children: const [
-                _DowLabel('Mon'),
-                _DowLabel('Tue'),
-                _DowLabel('Wed'),
-                _DowLabel('Thu'),
-                _DowLabel('Fri'),
-                _DowLabel('Sat'),
-                _DowLabel('Sun'),
+              children: [
+                _DowLabel(l10n.weekday_short_mon),
+                _DowLabel(l10n.weekday_short_tue),
+                _DowLabel(l10n.weekday_short_wed),
+                _DowLabel(l10n.weekday_short_thu),
+                _DowLabel(l10n.weekday_short_fri),
+                _DowLabel(l10n.weekday_short_sat),
+                _DowLabel(l10n.weekday_short_sun),
               ],
             ),
             const SizedBox(height: 8),
@@ -256,7 +199,7 @@ class _CalendarGrid extends StatelessWidget {
                               : isToday
                               ? Colors.white.withValues(alpha: 0.1)
                               : Colors.transparent,
-                          borderRadius: BorderRadius.circular(14),
+                          borderRadius: BorderRadius.circular(Raduis.l),
                           border: isSelected
                               ? Border.all(color: Colors.white, width: 1.2)
                               : null,
@@ -269,17 +212,18 @@ class _CalendarGrid extends StatelessWidget {
                                 children: [
                                   Text(
                                     '$dayNumber',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: isToday
-                                          ? FontWeight.w700
-                                          : FontWeight.w500,
-                                    ),
+                                    style: context.textTheme.bodyLarge
+                                        ?.copyWith(
+                                          color: Colors.white,
+                                          fontWeight: isToday
+                                              ? FontWeight.w700
+                                              : FontWeight.w500,
+                                        ),
                                   ),
                                   if (entry != null)
                                     Text(
                                       entry.emotion.emoji,
-                                      style: const TextStyle(fontSize: 14),
+                                      style: context.textTheme.bodySmall,
                                     ),
                                 ],
                               ),
@@ -327,7 +271,7 @@ class _DowLabel extends StatelessWidget {
       child: Center(
         child: Text(
           text,
-          style: const TextStyle(color: Colors.white60, fontSize: 12),
+          style: context.textTheme.bodySmall?.copyWith(color: Colors.white60),
         ),
       ),
     );
@@ -347,6 +291,7 @@ class _DaySummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     // Latest entry per slot for this day — used to render check vs +
     final latestPerSlot = <EmotionSlot, EmotionEntry>{};
     for (final e in entries) {
@@ -364,23 +309,26 @@ class _DaySummary extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              _formatDay(day),
-              style: const TextStyle(
+              _formatDay(day, l10n),
+              style: context.textTheme.titleMedium?.copyWith(
                 color: Colors.white,
-                fontSize: 16,
                 fontWeight: FontWeight.w700,
               ),
             ),
             const SizedBox(height: Spacing.sm),
-            const Text(
-              'Emotions logged',
-              style: TextStyle(color: Colors.white70, fontSize: 13),
+            Text(
+              l10n.emotions_logged,
+              style: context.textTheme.bodySmall?.copyWith(
+                color: Colors.white70,
+              ),
             ),
             const SizedBox(height: 6),
             if (entries.isEmpty)
-              const Text(
-                'No check-ins yet for this day.',
-                style: TextStyle(color: Colors.white54, fontSize: 12),
+              Text(
+                l10n.no_check_ins_for_day,
+                style: context.textTheme.bodySmall?.copyWith(
+                  color: Colors.white54,
+                ),
               )
             else
               Column(
@@ -392,21 +340,22 @@ class _DaySummary extends StatelessWidget {
                         children: [
                           Text(
                             e.emotion.emoji,
-                            style: const TextStyle(fontSize: 18),
+                            style: context.textTheme.titleMedium,
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            '${e.slot.label} · ${e.emotion.label}',
-                            style: const TextStyle(color: Colors.white),
+                            '${e.slot.labelOf(l10n)} · ${e.emotion.labelOf(l10n)}',
+                            style: context.textTheme.bodyMedium?.copyWith(
+                              color: Colors.white,
+                            ),
                           ),
                           if (e.note.isNotEmpty) ...[
                             const SizedBox(width: 6),
                             Expanded(
                               child: Text(
                                 '— ${e.note}',
-                                style: const TextStyle(
+                                style: context.textTheme.bodySmall?.copyWith(
                                   color: Colors.white60,
-                                  fontSize: 12,
                                   fontStyle: FontStyle.italic,
                                 ),
                                 overflow: TextOverflow.ellipsis,
@@ -421,15 +370,19 @@ class _DaySummary extends StatelessWidget {
             const SizedBox(height: Spacing.sm),
             const Divider(color: Colors.white24, height: 1),
             const SizedBox(height: Spacing.sm),
-            const Text(
-              'Goals due',
-              style: TextStyle(color: Colors.white70, fontSize: 13),
+            Text(
+              l10n.goals_due,
+              style: context.textTheme.bodySmall?.copyWith(
+                color: Colors.white70,
+              ),
             ),
             const SizedBox(height: 6),
             if (goals.isEmpty)
-              const Text(
-                'No goals due on this day.',
-                style: TextStyle(color: Colors.white54, fontSize: 12),
+              Text(
+                l10n.no_goals_due_for_day,
+                style: context.textTheme.bodySmall?.copyWith(
+                  color: Colors.white54,
+                ),
               )
             else
               Column(
@@ -448,7 +401,9 @@ class _DaySummary extends StatelessWidget {
                           Expanded(
                             child: Text(
                               g.title,
-                              style: const TextStyle(color: Colors.white),
+                              style: context.textTheme.bodyMedium?.copyWith(
+                                color: Colors.white,
+                              ),
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
@@ -459,13 +414,12 @@ class _DaySummary extends StatelessWidget {
                             ),
                             decoration: BoxDecoration(
                               color: g.priority.color.withValues(alpha: 0.25),
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(Raduis.sm),
                             ),
                             child: Text(
-                              g.priority.label,
-                              style: TextStyle(
+                              g.priority.labelOf(l10n),
+                              style: context.textTheme.labelSmall?.copyWith(
                                 color: g.priority.color,
-                                fontSize: 11,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -497,32 +451,12 @@ class _DaySummary extends StatelessWidget {
     );
   }
 
-  String _formatDay(DateTime d) {
-    const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ];
-    const wd = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    return '${wd[d.weekday - 1]}, ${months[d.month - 1]} ${d.day}, ${d.year}';
+  String _formatDay(DateTime d, AppLocalizations l10n) {
+    return '${l10n.weekdayShort(d.weekday)}, ${l10n.monthShort(d.month)} ${d.day}, ${d.year}';
   }
 }
 
 /// Per-slot check-in button used inside [_DaySummary].
-///
-/// When [entry] is null the button shows a `+` icon prompting the user to log
-/// an emotion for that slot. When an entry exists it switches to a soft-pink
-/// "checked" treatment: a check icon + the recorded emoji + a tinted fill,
-/// while still being tappable to update the entry.
 class _SlotCheckInButton extends StatelessWidget {
   const _SlotCheckInButton({
     required this.slot,
@@ -538,13 +472,14 @@ class _SlotCheckInButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final logged = entry != null;
 
     if (!logged) {
       return OutlinedButton.icon(
         onPressed: onTap,
         icon: const Icon(Icons.add, size: 16),
-        label: Text(slot.label, style: const TextStyle(fontSize: 12)),
+        label: Text(slot.labelOf(l10n), style: context.textTheme.labelSmall),
         style: OutlinedButton.styleFrom(
           foregroundColor: Colors.white,
           side: const BorderSide(color: Colors.white30),
@@ -567,13 +502,12 @@ class _SlotCheckInButton extends StatelessWidget {
         children: [
           Icon(Icons.check_circle_rounded, size: 16, color: _accent),
           const SizedBox(width: 4),
-          Text(entry!.emotion.emoji, style: const TextStyle(fontSize: 14)),
+          Text(entry!.emotion.emoji, style: context.textTheme.bodySmall),
           const SizedBox(width: 4),
           Flexible(
             child: Text(
-              slot.label,
-              style: const TextStyle(
-                fontSize: 12,
+              slot.labelOf(l10n),
+              style: context.textTheme.labelSmall?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
               overflow: TextOverflow.ellipsis,

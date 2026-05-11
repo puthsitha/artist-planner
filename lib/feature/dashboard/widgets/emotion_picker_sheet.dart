@@ -1,6 +1,8 @@
 import 'package:artistplanner/core/enums/enums.dart';
+import 'package:artistplanner/core/extensions/extensions.dart';
 import 'package:artistplanner/core/themes/themes.dart';
 import 'package:artistplanner/feature/dashboard/bloc/emotion_bloc.dart';
+import 'package:artistplanner/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
@@ -68,6 +70,7 @@ class _EmotionPickerSheetState extends State<EmotionPickerSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
     return SafeArea(
       child: Padding(
@@ -99,10 +102,9 @@ class _EmotionPickerSheetState extends State<EmotionPickerSheet> {
                       ),
                       const SizedBox(width: Spacing.sm),
                       Text(
-                        '${widget.slot.label} check-in',
-                        style: const TextStyle(
+                        l10n.slot_check_in_title(widget.slot.labelOf(l10n)),
+                        style: context.textTheme.headlineSmall?.copyWith(
                           color: Colors.white,
-                          fontSize: 18,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -110,8 +112,10 @@ class _EmotionPickerSheetState extends State<EmotionPickerSheet> {
                   ),
                   const SizedBox(height: Spacing.xs),
                   Text(
-                    widget.slot.hint,
-                    style: const TextStyle(color: Colors.white70),
+                    widget.slot.hintOf(l10n),
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      color: Colors.white70,
+                    ),
                   ),
                   const SizedBox(height: Spacing.normal),
                   Wrap(
@@ -129,39 +133,54 @@ class _EmotionPickerSheetState extends State<EmotionPickerSheet> {
                   const SizedBox(height: Spacing.normal),
                   TextField(
                     controller: _noteController,
-                    style: const TextStyle(color: Colors.white),
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      color: Colors.white,
+                    ),
                     maxLines: 3,
                     decoration: InputDecoration(
-                      hintText: 'Optional note about how you feel…',
-                      hintStyle: const TextStyle(color: Colors.white54),
+                      hintText: l10n.optional_emotion_note_hint,
+                      hintStyle: context.textTheme.bodyMedium?.copyWith(
+                        color: Colors.white54,
+                      ),
                       filled: true,
                       fillColor: Colors.white.withValues(alpha: 0.08),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(Raduis.xl),
                         borderSide: BorderSide.none,
                       ),
                     ),
                   ),
-                  if (_selected != null) ...[
-                    const SizedBox(height: Spacing.normal),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: _selected == null ? null : _save,
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 14),
+                  const SizedBox(height: Spacing.normal),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: _selected == null ? null : _save,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        backgroundColor: _selected != null
+                            ? AppColors.mintPrimary
+                            : Colors.grey.withValues(alpha: 0.3),
+                        foregroundColor: _selected != null
+                            ? Colors.white
+                            : Colors.grey.withValues(alpha: 0.6),
+                        disabledBackgroundColor: Colors.grey.withValues(
+                          alpha: 0.3,
                         ),
-                        child: const Text(
-                          'Save check-in',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                          ),
+                        disabledForegroundColor: Colors.grey.withValues(
+                          alpha: 0.6,
+                        ),
+                      ),
+                      child: Text(
+                        l10n.save_check_in,
+                        style: context.textTheme.labelLarge?.copyWith(
+                          color: _selected != null
+                              ? Colors.white
+                              : Colors.grey.withValues(alpha: 0.6),
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
                     ),
-                  ],
+                  ),
                 ],
               ),
             ),
@@ -185,6 +204,7 @@ class _EmotionChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
@@ -194,7 +214,7 @@ class _EmotionChip extends StatelessWidget {
           color: selected
               ? Colors.white.withValues(alpha: 0.25)
               : Colors.white.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(Raduis.xl),
           border: Border.all(
             color: selected ? Colors.white : Colors.white24,
             width: selected ? 1.5 : 1,
@@ -203,11 +223,11 @@ class _EmotionChip extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(emotion.emoji, style: const TextStyle(fontSize: 18)),
+            Text(emotion.emoji, style: context.textTheme.headlineSmall),
             const SizedBox(width: 6),
             Text(
-              emotion.label,
-              style: const TextStyle(
+              emotion.labelOf(l10n),
+              style: context.textTheme.bodyMedium?.copyWith(
                 color: Colors.white,
                 fontWeight: FontWeight.w500,
               ),

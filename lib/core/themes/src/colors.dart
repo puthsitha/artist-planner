@@ -29,6 +29,8 @@ class AppColors {
   static const blueLight = Color(0xFF4F6FB4);
   //red
   static const redPrimary = Color(0xFFFC3B3B);
+  //mint
+  static const mintPrimary = Color(0xFF7FE5B6);
 
   // grey shades
   static const pureWhite = Color(0xFFFFFFFF);
@@ -67,6 +69,7 @@ class AppColorScheme extends ThemeExtension<AppColorScheme> {
     required this.blueLight,
     required this.greyLight,
     required this.redPrimary,
+    required this.mintPrimary,
     required this.greyPrimary,
     required this.greySecondary,
     required this.greyDark,
@@ -119,6 +122,8 @@ class AppColorScheme extends ThemeExtension<AppColorScheme> {
   final Color greyDark;
   //red
   final Color redPrimary;
+  //mint
+  final Color mintPrimary;
   // Shades
   final Color pureWhite;
   final Color lightShadeGrey10;
@@ -166,6 +171,7 @@ class AppColorScheme extends ThemeExtension<AppColorScheme> {
       blueLight: blueLight,
       greyLight: greyLight,
       redPrimary: redPrimary,
+      mintPrimary: mintPrimary,
       greyPrimary: greyPrimary,
       greySecondary: greySecondary,
       greyDark: greyDark,
@@ -207,6 +213,7 @@ class AppColorScheme extends ThemeExtension<AppColorScheme> {
     Color? blueLight,
     Color? greyLight,
     Color? redPrimary,
+    Color? mintPrimary,
     Color? greyPrimary,
     Color? greySecondary,
     Color? greyDark,
@@ -245,6 +252,7 @@ class AppColorScheme extends ThemeExtension<AppColorScheme> {
       blueLight: blueLight ?? this.blueLight,
       greyLight: greyLight ?? this.greyLight,
       redPrimary: redPrimary ?? this.redPrimary,
+      mintPrimary: mintPrimary ?? this.mintPrimary,
       greyPrimary: greyPrimary ?? this.greyPrimary,
       greySecondary: greySecondary ?? this.greySecondary,
       greyDark: greyDark ?? this.greyDark,
