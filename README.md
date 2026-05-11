@@ -95,6 +95,41 @@ _\*Artistplanner works on iOS and Android._
 
 ---
 
+## Building APK (Android) 📦
+
+> Make sure you have FVM installed and the correct Flutter version set before building.
+
+### Build APK by Flavor
+
+Since the project uses product flavors, you **must** pass `--flavor` when building. A plain `flutter build apk` will fail.
+
+```sh
+# Production (release)
+$ fvm flutter build apk --flavor production --release
+
+# Staging (release)
+$ fvm flutter build apk --flavor staging --release
+
+# Development (release)
+$ fvm flutter build apk --flavor development --release
+```
+
+The output APK will be located at:
+
+```
+build/app/outputs/flutter-apk/app-<flavor>-release.apk
+```
+
+### Build APK Split by ABI (smaller file size)
+
+```sh
+$ fvm flutter build apk --flavor production --release --split-per-abi
+```
+
+This generates separate APKs for `arm64-v8a`, `armeabi-v7a`, and `x86_64` — recommended for manual distribution.
+
+---
+
 ### Generating Translations
 
 To use the latest translations changes, you will need to generate them:
