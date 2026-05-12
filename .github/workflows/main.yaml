@@ -30,6 +30,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
+          flutter-version: "3.41.9"
           channel: "stable"
           cache: true
 
@@ -43,7 +44,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: android-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: build/app/outputs/flutter-apk/app-production-release.apk
           retention-days: 30
 
       - name: Create Release
@@ -55,7 +56,7 @@ jobs:
           body: "APK built from commit ${{ github.sha }}"
           draft: false
           prerelease: false
-          files: build/app/outputs/flutter-apk/app-release.apk
+          files: build/app/outputs/flutter-apk/app-production-release.apk
 
   build-ipa:
     name: Build IPA (iOS)
