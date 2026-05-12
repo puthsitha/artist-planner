@@ -20,6 +20,8 @@ jobs:
     name: Build APK (Android)
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout code
@@ -46,20 +48,21 @@ jobs:
 
       - name: Create Release
         if: success()
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: android-${{ github.run_number }}
-          release_name: "Android Build #${{ github.run_number }}"
+          name: "Android Build #${{ github.run_number }}"
           body: "APK built from commit ${{ github.sha }}"
           draft: false
           prerelease: false
+          files: build/app/outputs/flutter-apk/app-release.apk
 
   build-ipa:
     name: Build IPA (iOS)
     runs-on: macos-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout code
@@ -76,7 +79,7 @@ jobs:
         run: flutter pub get
 
       - name: Install CocoaPods dependencies
-        run: pod install
+        run: pod install --repo-update
         working-directory: ios
 
       - name: Build iOS
@@ -100,15 +103,14 @@ jobs:
 
       - name: Create Release
         if: success()
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ios-${{ github.run_number }}
-          release_name: "iOS Build #${{ github.run_number }}"
+          name: "iOS Build #${{ github.run_number }}"
           body: "IPA built from commit ${{ github.sha }}"
           draft: false
           prerelease: false
+          files: build/ipa/Runner.ipa
 
 #   spell-check:
 #     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/spell_check.yml@v1
