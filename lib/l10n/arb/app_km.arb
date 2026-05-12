@@ -362,5 +362,73 @@
   "tap_to_select": "ចុចដើម្បីជ្រើសរើសខែ និងឆ្នាំ",
   "@tap_to_select": {},
   "required": "ត្រូវបាន",
-  "@required": {}
+  "@required": {},
+
+  "notif_emotion_title": "តើអ្នកមានអារម្មណ៍យ៉ាងណា?",
+  "@notif_emotion_title": {},
+  "notif_emotion_morning_body": "ចំណាយពេលខ្លះកត់ត្រាអារម្មណ៍ពេលព្រឹករបស់អ្នក ✨",
+  "@notif_emotion_morning_body": {},
+  "notif_emotion_afternoon_body": "ឈប់សម្រាក និងពិនិត្យអារម្មណ៍ពេលរសៀលរបស់អ្នក 🌿",
+  "@notif_emotion_afternoon_body": {},
+  "notif_emotion_evening_body": "បញ្ចប់ថ្ងៃ — កត់ត្រាអារម្មណ៍ពេលល្ងាចរបស់អ្នក 🌙",
+  "@notif_emotion_evening_body": {},
+
+  "notif_reflection_title": "ដល់ពេលឆ្លុះបញ្ចាំងលើខែរបស់អ្នកហើយ",
+  "@notif_reflection_title": {},
+  "notif_reflection_morning_body": "ខែនេះជិតបញ្ចប់ហើយ — ចាប់ផ្តើមការឆ្លុះបញ្ចាំងពេលព្រឹកដ៏ស្រស់នេះ។",
+  "@notif_reflection_morning_body": {},
+  "notif_reflection_afternoon_body": "នៅមានពេល៖ ចំណាយពេលពីរបីនាទីដើម្បីឆ្លុះបញ្ចាំងលើខែរបស់អ្នក។",
+  "@notif_reflection_afternoon_body": {},
+  "notif_reflection_evening_body": "ឱកាសចុងក្រោយសម្រាប់ការឆ្លុះបញ្ចាំងខែនេះ — ប្រារព្ធខ្លួនអ្នកមុនពេលអាធ្រាត្រ។",
+  "@notif_reflection_evening_body": {},
+
+  "notif_goal_title": "មានគោលដៅមួយត្រូវបញ្ចប់នៅថ្ងៃនេះ",
+  "@notif_goal_title": {},
+  "notif_goal_morning_body": "ថ្ងៃនេះគឺជាថ្ងៃដែលត្រូវបញ្ចប់៖ {title}។ ធ្វើឱ្យវាក្លាយជាការពិត។",
+  "@notif_goal_morning_body": {
+    "placeholders": {
+      "title": { "type": "String" }
+    }
+  },
+  "notif_goal_afternoon_body": "នៅសល់៖ {title}។ មួយម៉ោងផ្តោតអារម្មណ៍អាចបញ្ចប់វាបាន។",
+  "@notif_goal_afternoon_body": {
+    "placeholders": {
+      "title": { "type": "String" }
+    }
+  },
+  "notif_goal_evening_body": "ឱកាសចុងក្រោយថ្ងៃនេះដើម្បីបញ្ចប់៖ {title}។",
+  "@notif_goal_evening_body": {
+    "placeholders": {
+      "title": { "type": "String" }
+    }
+  },
+
+  "notifications_title": "ការជូនដំណឹង",
+  "@notifications_title": {},
+  "notifications_subtitle": "ជ្រើសរើសអ្វីដែលត្រូវរំលឹក និងពេលណា",
+  "@notifications_subtitle": {},
+  "notif_section_reminders": "ការរំលឹក",
+  "@notif_section_reminders": {},
+  "notif_section_times": "ម៉ោងរំលឹក",
+  "@notif_section_times": {},
+  "notif_emotion_label": "ការកត់ត្រាអារម្មណ៍ប្រចាំថ្ងៃ",
+  "@notif_emotion_label": {},
+  "notif_emotion_caption": "រំលឹកបីដងក្នុងមួយថ្ងៃ ដើម្បីកត់ត្រាអារម្មណ៍",
+  "@notif_emotion_caption": {},
+  "notif_reflection_label": "ការឆ្លុះបញ្ចាំងប្រចាំខែ",
+  "@notif_reflection_label": {},
+  "notif_reflection_caption": "នៅថ្ងៃចុងក្រោយនៃខែនីមួយៗ",
+  "@notif_reflection_caption": {},
+  "notif_goal_label": "រំលឹកថ្ងៃផុតកំណត់គោលដៅ",
+  "@notif_goal_label": {},
+  "notif_goal_caption": "នៅថ្ងៃដែលគោលដៅត្រូវបញ្ចប់ រហូតដល់បញ្ចប់",
+  "@notif_goal_caption": {},
+  "notif_morning_time": "ព្រឹក",
+  "@notif_morning_time": {},
+  "notif_afternoon_time": "រសៀល",
+  "@notif_afternoon_time": {},
+  "notif_evening_time": "ល្ងាច",
+  "@notif_evening_time": {},
+  "notif_reset_defaults": "កំណត់ឡើងវិញ",
+  "@notif_reset_defaults": {}
 }

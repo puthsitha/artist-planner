@@ -6,6 +6,7 @@ import 'package:artistplanner/core/themes/themes.dart';
 import 'package:artistplanner/feature/calendar/calendar.dart';
 import 'package:artistplanner/feature/dashboard/dashboard.dart';
 import 'package:artistplanner/feature/goal/goal.dart';
+import 'package:artistplanner/feature/notification_setting/notification_setting.dart';
 import 'package:artistplanner/feature/on_boarding/on_boarding.dart';
 import 'package:artistplanner/feature/setting/setting.dart';
 import 'package:artistplanner/feature/splash/splash.dart';
@@ -36,6 +37,9 @@ enum Pages {
 
   /// setting
   setting,
+
+  /// notification settings
+  notificationSetting,
 }
 
 class AppRouter {
@@ -180,6 +184,18 @@ class AppRouter {
                     pageBuilder: (context, state) {
                       return SettingPage.page(key: state.pageKey);
                     },
+                    routes: [
+                      GoRoute(
+                        path: 'notifications',
+                        name: Pages.notificationSetting.name,
+                        parentNavigatorKey: rootNavigatorKey,
+                        pageBuilder: (context, state) {
+                          return NotificationSettingsPage.page(
+                            key: state.pageKey,
+                          );
+                        },
+                      ),
+                    ],
                   ),
                 ],
               ),
