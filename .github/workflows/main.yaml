@@ -79,7 +79,9 @@ jobs:
         run: flutter pub get
 
       - name: Install CocoaPods dependencies
-        run: pod install --repo-update
+        run: |
+          rm -rf Pods
+          pod install --repo-update
         working-directory: ios
 
       - name: Build iOS
