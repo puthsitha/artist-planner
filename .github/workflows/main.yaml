@@ -16,46 +16,46 @@ jobs:
   # semantic-pull-request:
   #   uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/semantic_pull_request.yml@v1
 
-  # build-apk:
-  #   name: Build APK (Android)
-  #   runs-on: ubuntu-latest
-  #   if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-  #   permissions:
-  #     contents: write
+  build-apk:
+    name: Build APK (Android)
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: write
 
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v4
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-  #     - name: Setup Flutter
-  #       uses: subosito/flutter-action@v2
-  #       with:
-  #         channel: "stable"
-  #         cache: true
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          cache: true
 
-  #     - name: Get dependencies
-  #       run: flutter pub get
+      - name: Get dependencies
+        run: flutter pub get
 
-  #     - name: Build APK
-  #       run: flutter build apk --flavor production --release
+      - name: Build APK
+        run: flutter build apk --flavor production --release
 
-  #     - name: Upload APK artifact
-  #       uses: actions/upload-artifact@v4
-  #       with:
-  #         name: android-apk
-  #         path: build/app/outputs/flutter-apk/app-release.apk
-  #         retention-days: 30
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 30
 
-  #     - name: Create Release
-  #       if: success()
-  #       uses: softprops/action-gh-release@v2
-  #       with:
-  #         tag_name: release-v1-${{ github.run_number }}
-  #         name: "Arist Planner V1 (Android) #${{ github.run_number }}"
-  #         body: "APK built from commit ${{ github.sha }}"
-  #         draft: false
-  #         prerelease: false
-  #         files: build/app/outputs/flutter-apk/app-release.apk
+      - name: Create Release
+        if: success()
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1-android-${{ github.run_number }}
+          name: "Artist Planner V1 (Android) #${{ github.run_number }}"
+          body: "APK built from commit ${{ github.sha }}"
+          draft: false
+          prerelease: false
+          files: build/app/outputs/flutter-apk/app-release.apk
 
   build-ipa:
     name: Build IPA (iOS)
@@ -110,8 +110,8 @@ jobs:
         if: success()
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ios-${{ github.run_number }}
-          name: "iOS Build #${{ github.run_number }}"
+          tag_name: v1-ios-${{ github.run_number }}
+          name: "Artist Planner V1 (iOS) #${{ github.run_number }}"
           body: "IPA built from commit ${{ github.sha }}"
           draft: false
           prerelease: false
