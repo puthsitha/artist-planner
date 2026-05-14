@@ -14,6 +14,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 ///  * It listens to [NotificationSettingsBloc] so toggling reminders or
 ///    changing slot times also triggers a full re-schedule.
 ///  * Locale changes also trigger a re-schedule so the body language matches.
+///  * On [AppLifecycleState.resume] it re-schedules so that exact-alarm
+///    permission granted while the user was in Settings takes effect
+///    immediately (Android 12+ SCHEDULE_EXACT_ALARM flow).
 class NotificationCoordinator extends StatefulWidget {
   const NotificationCoordinator({required this.child, super.key});
 
@@ -28,6 +31,34 @@ class _NotificationCoordinatorState extends State<NotificationCoordinator> {
   Locale? _lastLocale;
   GoalState? _lastGoalState;
   bool _firstRunDone = false;
+  late final AppLifecycleListener _lifecycleListener;
+
+  @override
+  void initState() {
+    super.initState();
+    _lifecycleListener = AppLifecycleListener(
+      onResume: _onAppResume,
+    );
+  }
+
+  @override
+  void dispose() {
+    _lifecycleListener.dispose();
+    super.dispose();
+  }
+
+  /// Called when the app comes back to the foreground (e.g. after the user
+  /// visits Settings to grant SCHEDULE_EXACT_ALARM on Android 12+).
+  /// Re-schedules everything so the correct [AndroidScheduleMode] is used now
+  /// that the permission may have changed.
+  Future<void> _onAppResume() async {
+    if (!_firstRunDone || !mounted) return;
+    final l = AppLocalizations.of(context);
+    final goalState = context.read<GoalBloc>().state;
+    final settings = context.read<NotificationSettingsBloc>().state;
+    await _rescheduleAll(l, goalState, settings);
+    _lastGoalState = goalState;
+  }
 
   Future<void> _bootstrapPermissions() async {
     await NotificationService.instance.requestPermissions();

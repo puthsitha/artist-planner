@@ -38,6 +38,31 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+        <!--
+          flutter_local_notifications receivers.
+          These are normally auto-merged from the plugin's own manifest, but
+          declaring them explicitly here prevents silent failures when the
+          Gradle manifest-merger skips or overrides the plugin entries.
+        -->
+
+        <!-- Fires pending zonedSchedule alarms that were set via AlarmManager. -->
+        <receiver
+            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver"
+            android:exported="false"/>
+
+        <!-- Re-schedules pending notifications after a device reboot or
+             app update so they survive being cleared by the OS. -->
+        <receiver
+            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+                <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
+            </intent-filter>
+        </receiver>
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and

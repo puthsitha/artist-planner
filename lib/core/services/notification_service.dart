@@ -142,6 +142,19 @@ class NotificationService {
   // Public API
   // ---------------------------------------------------------------------------
 
+  /// Returns true if the app can fire exact alarms on this device.
+  ///
+  /// On Android < 12 and on iOS this always returns true.
+  /// On Android 12+ (API 31+) the user must grant the SCHEDULE_EXACT_ALARM
+  /// permission via Settings → Apps → Special app access → Alarms & reminders.
+  Future<bool> canScheduleExactNotifications() async {
+    if (!Platform.isAndroid) return true;
+    final android = _plugin.resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>();
+    if (android == null) return false;
+    return await android.canScheduleExactNotifications() ?? false;
+  }
+
   /// Schedules the three repeating daily emotion check-in reminders.
   ///
   /// Idempotent: cancels any previously scheduled emotion reminders first.
@@ -159,6 +172,12 @@ class NotificationService {
 
     if (!enabled) return;
 
+    // Use alarmClock when we have exact-alarm permission (most reliable, fires
+    // through Doze). Fall back to inexact if the user hasn't granted it yet —
+    // the coordinator will re-schedule the moment the app resumes after the
+    // user visits Settings.
+    final scheduleMode = await _resolveScheduleMode();
+
     for (final slot in slots) {
       final id = _emotionNotifId(slot.index);
       final scheduled = _nextInstanceOf(slot.hour, slot.minute);
@@ -169,7 +188,7 @@ class NotificationService {
         bodyBySlot[slot.index] ?? '',
         scheduled,
         _detailsFor(NotifKind.emotion),
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        androidScheduleMode: scheduleMode,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
         matchDateTimeComponents: DateTimeComponents.time, // repeat daily
@@ -218,13 +237,15 @@ class NotificationService {
 
       final id = _reflectionNotifId(lastDay.month, lastDay.day, slot.index);
 
+      final scheduleMode = await _resolveScheduleMode();
+
       await _plugin.zonedSchedule(
         id,
         title,
         bodyBySlot[slot.index] ?? '',
         scheduled,
         _detailsFor(NotifKind.monthlyReflection),
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        androidScheduleMode: scheduleMode,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
         payload: 'reflection:${lastDay.year}-${lastDay.month}:${slot.index}',
@@ -274,6 +295,7 @@ class NotificationService {
       if (scheduled.isBefore(tz.TZDateTime.now(tz.local))) continue;
 
       final id = _goalNotifId(goalId, slot.index);
+      final scheduleMode = await _resolveScheduleMode();
 
       await _plugin.zonedSchedule(
         id,
@@ -281,7 +303,7 @@ class NotificationService {
         (bodyBySlot[slot.index] ?? '').replaceAll('{title}', goalTitle),
         scheduled,
         _detailsFor(NotifKind.goalDue),
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        androidScheduleMode: scheduleMode,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
         payload: 'goal:$goalId:${slot.index}',
@@ -312,6 +334,20 @@ class NotificationService {
   // ---------------------------------------------------------------------------
   // Internals
   // ---------------------------------------------------------------------------
+
+  /// Resolves the best [AndroidScheduleMode] for the current device.
+  ///
+  /// * [AndroidScheduleMode.alarmClock] — exact, bypasses Doze, shows an
+  ///   alarm-clock icon. Requires SCHEDULE_EXACT_ALARM / USE_EXACT_ALARM.
+  /// * [AndroidScheduleMode.inexactAllowWhileIdle] — falls back gracefully
+  ///   when the user has not yet granted exact-alarm permission. The OS fires
+  ///   the notification within a short window around the scheduled time.
+  Future<AndroidScheduleMode> _resolveScheduleMode() async {
+    final canExact = await canScheduleExactNotifications();
+    return canExact
+        ? AndroidScheduleMode.alarmClock
+        : AndroidScheduleMode.inexactAllowWhileIdle;
+  }
 
   Future<void> _cancelKind(NotifKind kind) async {
     final pending = await _plugin.pendingNotificationRequests();
