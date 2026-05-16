@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:timezone/data/latest_all.dart' as tz_data;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -124,15 +125,25 @@ class NotificationService {
     }
 
     if (Platform.isAndroid) {
+      // Use permission_handler for a reliable POST_NOTIFICATIONS system dialog
+      // on Android 13+ (API 33+). flutter_local_notifications alone can skip
+      // the dialog silently on some devices.
+      final notifStatus = await Permission.notification.request();
+      if (notifStatus.isPermanentlyDenied) {
+        log('NotificationService: POST_NOTIFICATIONS permanently denied');
+        return false;
+      }
+
+      // For exact alarms (Android 12+) — request best-effort via the plugin so
+      // the coordinator can fall back to inexactAllowWhileIdle when denied.
       final android = _plugin
           .resolvePlatformSpecificImplementation<
               AndroidFlutterLocalNotificationsPlugin>();
-      if (android == null) return false;
-      // Android 13+ requires runtime permission for POST_NOTIFICATIONS.
-      final granted = await android.requestNotificationsPermission() ?? true;
-      // For exact alarms (Android 12+) — request best-effort.
-      await android.requestExactAlarmsPermission();
-      return granted;
+      if (android != null) {
+        await android.requestExactAlarmsPermission();
+      }
+
+      return notifStatus.isGranted;
     }
 
     return true;
