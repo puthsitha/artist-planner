@@ -6,7 +6,10 @@ plugins {
 
 android {
     namespace = "com.puthsitha.app.artistplanner"
-    compileSdk = flutter.compileSdkVersion
+    // Hardcoded to 36 (Android 16 / Baklava) so AlarmManager and notification
+    // channel APIs behave correctly on Android 16 Samsung devices.
+    // flutter.compileSdkVersion was 35 and caused silent alarm failures.
+    compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
     compileOptions {

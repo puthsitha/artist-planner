@@ -143,6 +143,16 @@ class NotificationService {
         await android.requestExactAlarmsPermission();
       }
 
+      // Samsung / Android 16: battery optimisation aggressively kills
+      // AlarmManager callbacks while the app is in Doze mode.
+      // Requesting the exemption here ensures notifications fire on time even
+      // on Samsung One UI 7 devices. The OS shows a one-time system dialog.
+      final batteryStatus =
+          await Permission.ignoreBatteryOptimizations.status;
+      if (!batteryStatus.isGranted) {
+        await Permission.ignoreBatteryOptimizations.request();
+      }
+
       return notifStatus.isGranted;
     }
 
@@ -377,8 +387,11 @@ class NotificationService {
             _Channels.emotion,
             'Emotion check-ins',
             channelDescription: 'Daily reminders to log how you feel',
-            importance: Importance.defaultImportance,
-            priority: Priority.defaultPriority,
+            // Raised from defaultImportance → high so Samsung One UI does not
+            // silently suppress the notification in the status bar without
+            // playing a sound (defaultImportance = no heads-up on Samsung).
+            importance: Importance.high,
+            priority: Priority.high,
           ),
           iOS: DarwinNotificationDetails(
             categoryIdentifier: _Channels.emotion,
