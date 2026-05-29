@@ -473,6 +473,118 @@ class NotificationService {
     return null;
   }
 
+  // ---------------------------------------------------------------------------
+  // Diagnostics (debug-only helpers)
+  //
+  // These do not change scheduling behaviour — they only inspect it. Use them
+  // to figure out why a scheduled notification isn't firing on a real device
+  // (almost always: exact-alarm denied -> inexact fallback -> Doze delays it,
+  // or an OEM battery manager killing the alarm).
+  // ---------------------------------------------------------------------------
+
+  /// Reserved id outside every [NotifKind] range (emotion 0..99,
+  /// reflection 100k..<500k, goal >=500k) so the test notification is never
+  /// auto-cancelled by [_cancelKind] or the goal/reflection cancel paths.
+  static const int _testNotifId = 99999;
+
+  /// Builds a human-readable report explaining the current delivery state.
+  ///
+  /// Logs it via `dart:developer` [log] (so it shows in `flutter logs` /
+  /// the IDE console) and also returns the string so a debug screen can show
+  /// or copy it. Safe to call any time after [init].
+  Future<String> diagnostics() async {
+    if (!_initialized) await init();
+
+    final b = StringBuffer()
+      ..writeln('=== NotificationService diagnostics ===')
+      ..writeln('platform:        ${Platform.operatingSystem}')
+      ..writeln('local timezone:  ${tz.local.name}')
+      ..writeln('now (local):     ${tz.TZDateTime.now(tz.local)}');
+
+    if (Platform.isAndroid) {
+      final android = _plugin.resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>();
+
+      final notifEnabled = await android?.areNotificationsEnabled();
+      final canExact = await android?.canScheduleExactNotifications();
+      final mode = await _resolveScheduleMode();
+
+      b
+        ..writeln('--- Android ---')
+        ..writeln('notifications enabled: $notifEnabled '
+            '(false => channel/app notifications are off in system settings)')
+        ..writeln('can schedule EXACT alarms: $canExact '
+            '(false => inexact fallback; Doze can delay/drop reminders)')
+        ..writeln('resolved schedule mode: ${mode.name}')
+        ..writeln('POST_NOTIFICATIONS:    '
+            '${await Permission.notification.status}')
+        ..writeln('SCHEDULE_EXACT_ALARM:  '
+            '${await Permission.scheduleExactAlarm.status}')
+        ..writeln('battery optimization ignored: '
+            '${await Permission.ignoreBatteryOptimizations.status} '
+            '(denied => OEM battery saver may kill alarms in the background)');
+
+      final active = await android?.getActiveNotifications() ?? const [];
+      b.writeln('active (currently shown): ${active.length}');
+    } else if (Platform.isIOS) {
+      final ios = _plugin.resolvePlatformSpecificImplementation<
+          IOSFlutterLocalNotificationsPlugin>();
+      final perms = await ios?.checkPermissions();
+      b
+        ..writeln('--- iOS ---')
+        ..writeln('alert:  ${perms?.isAlertEnabled}')
+        ..writeln('badge:  ${perms?.isBadgeEnabled}')
+        ..writeln('sound:  ${perms?.isSoundEnabled}');
+    }
+
+    final pending = await _plugin.pendingNotificationRequests();
+    b.writeln('--- pending (${pending.length}) ---');
+    for (final p in pending) {
+      b.writeln('  #${p.id} [${_kindFromId(p.id)?.name ?? 'other'}] '
+          '"${p.title}"  payload=${p.payload}');
+    }
+    b.write('=======================================');
+
+    final report = b.toString();
+    log(report, name: 'NotificationService');
+    return report;
+  }
+
+  /// Schedules a one-shot test notification [delay] from now (default 1 min)
+  /// using the *exact same* code path as the real reminders, so it surfaces any
+  /// real-device delivery problem end-to-end.
+  ///
+  /// To test properly: call this, then **background** the app (home button) and
+  /// lock the screen — do NOT hot-restart or force-stop, both clear pending
+  /// alarms. Returns the [tz.TZDateTime] it was scheduled for.
+  Future<tz.TZDateTime> scheduleTestNotification({
+    Duration delay = const Duration(minutes: 1),
+  }) async {
+    if (!_initialized) await init();
+
+    final when = tz.TZDateTime.now(tz.local).add(delay);
+    final mode = await _resolveScheduleMode();
+
+    await _plugin.zonedSchedule(
+      _testNotifId,
+      'Test notification',
+      'Fires at $when (mode: ${mode.name})',
+      when,
+      _detailsFor(NotifKind.emotion),
+      androidScheduleMode: mode,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+      payload: 'test',
+    );
+
+    log('NotificationService: test notification scheduled for $when '
+        '(mode ${mode.name})', name: 'NotificationService');
+    return when;
+  }
+
+  /// Cancels the pending test notification scheduled by [scheduleTestNotification].
+  Future<void> cancelTestNotification() => _plugin.cancel(_testNotifId);
+
   @visibleForTesting
   FlutterLocalNotificationsPlugin get pluginForTest => _plugin;
 }
