@@ -74,7 +74,7 @@ flutter {
 }
 
 dependencies {
+    implementation("com.google.android.play:core:1.10.3")  // ✅ Kotlin DSL
     implementation("org.jetbrains.kotlin:kotlin-stdlib:2.2.10")
-    // Pairs with compileOptions.isCoreLibraryDesugaringEnabled above.
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }
