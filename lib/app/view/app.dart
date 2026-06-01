@@ -5,10 +5,12 @@ import 'package:artistplanner/core/blocs/theme/theme_bloc.dart';
 import 'package:artistplanner/core/common/common.dart';
 import 'package:artistplanner/core/enums/enums.dart';
 import 'package:artistplanner/core/routes/routes.dart';
+import 'package:artistplanner/core/services/services.dart';
 import 'package:artistplanner/core/themes/themes.dart';
 import 'package:artistplanner/feature/dashboard/bloc/emotion_bloc.dart';
 import 'package:artistplanner/feature/dashboard/bloc/quote_cubit.dart';
 import 'package:artistplanner/feature/goal/bloc/goal_bloc.dart';
+import 'package:artistplanner/feature/notification_setting/bloc/notification_settings_bloc.dart';
 import 'package:artistplanner/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -70,6 +72,7 @@ class _AppState extends State<App> {
         BlocProvider(create: (context) => EmotionBloc()),
         BlocProvider(create: (context) => GoalBloc()),
         BlocProvider(create: (context) => QuoteCubit()),
+        BlocProvider(create: (context) => NotificationSettingsBloc()),
       ],
       child: Builder(
         builder: (context) {
@@ -98,13 +101,15 @@ class _AppState extends State<App> {
                   child: child!,
                 );
 
-                if (_selectedBg.isEmpty) return childToast;
+                final wrapped = NotificationCoordinator(child: childToast);
+
+                if (_selectedBg.isEmpty) return wrapped;
 
                 return Stack(
                   fit: StackFit.expand,
                   children: [
                     Positioned.fill(child: Image.asset(_selectedBg, fit: BoxFit.cover)),
-                    childToast,
+                    wrapped,
                   ],
                 );
               },

@@ -310,8 +310,14 @@ final brownTheme = ThemeData(
     ),
   ),
   appBarTheme: AppBarTheme(
+    // Force white status-bar icons everywhere. iOS reads
+    // `statusBarBrightness` as "what's the brightness of the underlying app";
+    // setting it to dark tells iOS the bg is dark, so it renders LIGHT
+    // (white) icons. Android uses `statusBarIconBrightness` directly.
     systemOverlayStyle: const SystemUiOverlayStyle(
-      statusBarBrightness: Brightness.light,
+      statusBarColor: Color(0x00000000),
+      statusBarBrightness: Brightness.dark,
+      statusBarIconBrightness: Brightness.light,
     ),
     titleTextStyle: TextStyle(
       fontSize: 20,

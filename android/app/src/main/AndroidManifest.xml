@@ -1,4 +1,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Local notifications -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
+    <!--
+      Required on Samsung / Android 16: prevents Doze + battery-saver from
+      silently dropping AlarmManager callbacks. The user is prompted at runtime
+      via NotificationService.requestPermissions().
+    -->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
+
     <application
         android:label="${appName}"
         android:name="${applicationName}"
@@ -30,6 +44,39 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+        <!--
+          flutter_local_notifications receivers.
+          These are normally auto-merged from the plugin's own manifest, but
+          declaring them explicitly here prevents silent failures when the
+          Gradle manifest-merger skips or overrides the plugin entries.
+        -->
+
+        <!-- Fires pending zonedSchedule alarms that were set via AlarmManager.
+             directBootAware: lets the receiver start before the user unlocks
+             the device after a reboot (Android 7+ Direct Boot). -->
+        <receiver
+            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver"
+            android:exported="false"
+            android:directBootAware="true"/>
+
+        <!-- Re-schedules pending notifications after a device reboot or
+             app update so they survive being cleared by the OS.
+             LOCKED_BOOT_COMPLETED fires before the first unlock on Android 7+
+             (Direct Boot), ensuring alarms are restored even if the user never
+             unlocks — important on Samsung Android 16 with secure lock screens. -->
+        <receiver
+            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver"
+            android:exported="true"
+            android:directBootAware="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+                <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
+            </intent-filter>
+        </receiver>
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and

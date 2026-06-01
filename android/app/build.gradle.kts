@@ -6,12 +6,18 @@ plugins {
 
 android {
     namespace = "com.puthsitha.app.artistplanner"
-    compileSdk = flutter.compileSdkVersion
+    // Hardcoded to 36 (Android 16 / Baklava) so AlarmManager and notification
+    // channel APIs behave correctly on Android 16 Samsung devices.
+    // flutter.compileSdkVersion was 35 and caused silent alarm failures.
+    compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+        // Required by flutter_local_notifications — backports newer JDK APIs
+        // (java.time, etc.) to older Android API levels via D8 desugaring.
+        isCoreLibraryDesugaringEnabled = true
     }
 
     kotlinOptions {
@@ -68,5 +74,7 @@ flutter {
 }
 
 dependencies {
+    implementation("com.google.android.play:core:1.10.3")  // ✅ Kotlin DSL
     implementation("org.jetbrains.kotlin:kotlin-stdlib:2.2.10")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }

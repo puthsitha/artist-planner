@@ -1,12 +1,14 @@
 import 'package:artistplanner/core/blocs/theme/theme_bloc.dart';
 import 'package:artistplanner/core/common/common.dart';
 import 'package:artistplanner/core/extensions/extensions.dart';
+import 'package:artistplanner/core/routes/routes.dart';
 import 'package:artistplanner/core/themes/themes.dart';
 import 'package:artistplanner/l10n/l10n.dart';
 import 'package:artistplanner/widgets/widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -57,21 +59,21 @@ class SettingView extends StatelessWidget {
         backgroundColor: context.colors.transparent,
         title: Text(l10n.setting, style: TextStyle(color: AppColors.white)),
       ),
-      body: LiquidGlassLayer(
-        fake: !isGlassUI,
-        settings: LiquidGlassSettings(),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return SingleChildScrollView(
-              padding: const EdgeInsets.only(
-                bottom: kBottomNavBarHeight + Spacing.l,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            padding: const EdgeInsets.only(
+              bottom: kBottomNavBarHeight + Spacing.l,
+            ),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight:
+                    constraints.maxHeight - (kBottomNavBarHeight + Spacing.l),
               ),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight:
-                      constraints.maxHeight - (kBottomNavBarHeight + Spacing.l),
-                ),
-                child: IntrinsicHeight(
+              child: IntrinsicHeight(
+                child: LiquidGlassLayer(
+                  fake: !isGlassUI,
+                  settings: LiquidGlassSettings(),
                   child: Column(
                     children: [
                       Padding(
@@ -158,6 +160,43 @@ class SettingView extends StatelessWidget {
                                   borderRadius: 20,
                                 ),
                                 child: GlassGlow(
+                                  child: GestureDetector(
+                                    behavior: HitTestBehavior.opaque,
+                                    child: ListTile(
+                                      shape: BeveledRectangleBorder(
+                                        borderRadius:
+                                            BorderRadiusGeometry.circular(20),
+                                      ),
+                                      leading: const Icon(
+                                        Icons.notifications_active_rounded,
+                                        size: 40,
+                                        color: Color(0xFFFFC857),
+                                      ),
+                                      title: Text(
+                                        l10n.notifications_title,
+                                        style: context.textTheme.titleLarge,
+                                      ),
+                                      subtitle: Text(
+                                        l10n.notifications_subtitle,
+                                        style: context.textTheme.bodyLarge,
+                                      ),
+                                      trailing: const Icon(
+                                        Icons.arrow_forward_ios,
+                                      ),
+                                      onTap: () => context.pushNamed(
+                                        Pages.notificationSetting.name,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            LiquidStretch(
+                              child: LiquidGlass.grouped(
+                                shape: LiquidRoundedSuperellipse(
+                                  borderRadius: 20,
+                                ),
+                                child: GlassGlow(
                                   child: SwitchListTile.adaptive(
                                     shape: BeveledRectangleBorder(
                                       borderRadius:
@@ -208,9 +247,9 @@ class SettingView extends StatelessWidget {
                   ),
                 ),
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }

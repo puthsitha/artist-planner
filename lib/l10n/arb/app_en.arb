@@ -380,5 +380,73 @@
   "@tap_to_select": {},
 
   "required": "Required",
-  "@required": {}
+  "@required": {},
+
+  "notif_emotion_title": "How are you feeling?",
+  "@notif_emotion_title": {},
+  "notif_emotion_morning_body": "Take a moment to log your morning emotion ✨",
+  "@notif_emotion_morning_body": {},
+  "notif_emotion_afternoon_body": "Pause and check in with your afternoon mood 🌿",
+  "@notif_emotion_afternoon_body": {},
+  "notif_emotion_evening_body": "Wrap up the day — log your evening emotion 🌙",
+  "@notif_emotion_evening_body": {},
+
+  "notif_reflection_title": "Time to reflect on your month",
+  "@notif_reflection_title": {},
+  "notif_reflection_morning_body": "The month is wrapping up — start your reflection while the morning is fresh.",
+  "@notif_reflection_morning_body": {},
+  "notif_reflection_afternoon_body": "Still time today: take a few minutes to reflect on your month.",
+  "@notif_reflection_afternoon_body": {},
+  "notif_reflection_evening_body": "Last call for this month's reflection — celebrate yourself before midnight.",
+  "@notif_reflection_evening_body": {},
+
+  "notif_goal_title": "A goal is due today",
+  "@notif_goal_title": {},
+  "notif_goal_morning_body": "Today is the day to finish: {title}. Make it happen.",
+  "@notif_goal_morning_body": {
+    "placeholders": {
+      "title": { "type": "String" }
+    }
+  },
+  "notif_goal_afternoon_body": "Still pending: {title}. A focused hour can do it.",
+  "@notif_goal_afternoon_body": {
+    "placeholders": {
+      "title": { "type": "String" }
+    }
+  },
+  "notif_goal_evening_body": "Last chance today to complete: {title}.",
+  "@notif_goal_evening_body": {
+    "placeholders": {
+      "title": { "type": "String" }
+    }
+  },
+
+  "notifications_title": "Notifications",
+  "@notifications_title": {},
+  "notifications_subtitle": "Choose what to be reminded of and when",
+  "@notifications_subtitle": {},
+  "notif_section_reminders": "Reminders",
+  "@notif_section_reminders": {},
+  "notif_section_times": "Reminder times",
+  "@notif_section_times": {},
+  "notif_emotion_label": "Daily emotion check-ins",
+  "@notif_emotion_label": {},
+  "notif_emotion_caption": "Three reminders a day to log how you feel",
+  "@notif_emotion_caption": {},
+  "notif_reflection_label": "Monthly reflection",
+  "@notif_reflection_label": {},
+  "notif_reflection_caption": "On the last day of each month",
+  "@notif_reflection_caption": {},
+  "notif_goal_label": "Goal due-date reminders",
+  "@notif_goal_label": {},
+  "notif_goal_caption": "On the day a goal is due, until completed",
+  "@notif_goal_caption": {},
+  "notif_morning_time": "Morning",
+  "@notif_morning_time": {},
+  "notif_afternoon_time": "Afternoon",
+  "@notif_afternoon_time": {},
+  "notif_evening_time": "Evening",
+  "@notif_evening_time": {},
+  "notif_reset_defaults": "Reset to defaults",
+  "@notif_reset_defaults": {}
 }
