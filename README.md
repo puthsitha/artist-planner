@@ -64,6 +64,31 @@ Daily Personal Tracking Routing & Emotion with Monthly Goals.
 
 ---
 
+## Notification 📣 Reminder Alert
+
+<table>
+  <tr>
+    <th>Description</th>
+    <th>Notification</th>
+  </tr>
+  <tr>
+    <td><strong>Daily Emotion Reminder</strong>: alert 3 times a day to tracking your emotion.</td>
+    <td><img src="assets/docs/daily_reminder.jpg" width="300"></td>
+  </tr>
+  <tr>
+    <td><strong>Goal Reminder</strong>: alert to let user know today is the due date to acheive these goals.</td>
+    <td><img src="assets/docs/goal_reminder.jpg" width="300"></td>
+  </tr>
+  <tr>
+    <td><strong>Pendding Goald Reminder</strong>: uncheck or uncomplete goal cuz due date now.</td>
+    <td><img src="assets/docs/pending_goal_reminder.jpg" width="300"></td>
+  </tr>
+  <tr>
+    <td><strong>Reflextion Reminder</strong> : end of the month alert, fill in the reflextion.</td>
+    <td><img src="assets/docs/reflextion_reminder.jpg" width="300"></td>
+  </tr>
+</table>
+
 ## Using FVM 🧠
 
 - fvm stable version : 3.41.9
